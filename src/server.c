@@ -146,7 +146,6 @@ void server_loop() {
 	if (!server_state.enabled)
 		return;
 	server_check_alive();
-	/* TODO: state machine? */
 
 	switch (config.game_state) {
 		case GAME_STATE_GAME:

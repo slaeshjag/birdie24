@@ -8,6 +8,7 @@
 #include "farmer.h"
 #include "proto.h"
 #include "network.h"
+#include "sheep.h"
 
 struct server_player_list_e {
 	int				used;
@@ -30,6 +31,7 @@ struct server_player_list_e {
 struct server_player_state {
 	int				enabled;
 	struct server_player_list_e	plist[FARMER_COUNT];
+	struct sheep			shee[SHEEP_COUNT];
 	struct proto_packet		pp;	
 } server_state;
 

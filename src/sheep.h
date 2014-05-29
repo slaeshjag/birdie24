@@ -3,4 +3,13 @@
 
 #define	SHEEP_COUNT		299
 
+
+struct sheep {
+	int			x;
+	int			y;
+
+};
+
+void sheep_loop();
+
 #endif
