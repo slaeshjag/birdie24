@@ -23,6 +23,9 @@ int main(int argc, char **argv) {
 		return 1;
 	}
 	
+	int enabled = 1;
+	setsockopt(sock, SOL_SOCKET, SO_BROADCAST, &enabled, sizeof(enabled));
+	
 	if(bind(sock, (struct sockaddr *) &addr, sizeof(addr)) < 0) {
 		printf("njet.\n");
 		close(sock);
