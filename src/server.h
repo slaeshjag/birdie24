@@ -25,10 +25,12 @@ struct server_player_list_e {
 
 
 struct server_player_state {
+	int				enabled;
 	struct server_player_list_e	plist[FARMER_COUNT];
-	struct proto_packet		pp;
+	struct proto_packet		pp;	
 } server_state;
 
 void server_init();
+void server_loop();
 
 #endif

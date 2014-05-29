@@ -14,6 +14,7 @@ void server_kick(int player) {
 	int i;
 	struct proto_join_packet jp;
 
+	server_state.plist[player].used = 0;
 	jp.type = PROTO_TYPE_JOIN;
 	*jp.player_name = 0;
 	jp.player_id = -1; 
@@ -55,6 +56,7 @@ void server_handle_join(struct proto_join_packet *pj, unsigned long addr) {
 	network_send(addr, &jg, sizeof(jg));
 
 	pj->player_id = i;
+	server_state.plist[i].used = 1;
 	for (i = 0; i < FARMER_COUNT; i++)
 		if (server_state.plist[i].used)
 			network_send(server_state.plist[i].addr, pj, sizeof(*pj));
@@ -116,14 +118,28 @@ void server_handle_packet(void *packet, unsigned long addr) {
 }
 
 
+void server_start() {
+	server_init();
+	server_state.enabled = 1;
+
+	return;
+}
+
+
 void server_loop() {
-	struct proto_packet pp;
-	
+	int i;
+
+	if (!server_state.enabled)
+		return;
 	server_check_alive();
 	/* TODO: state machine? */
 
 	/* Do this per player */
-	proto_send(&pp);
+	for (i = 0; i < FARMER_COUNT; i++)
+		if (server_state.plist[i].used)
+			/* TODO: Check if in game state */
+			network_send(server_state.plist[i].addr, &server_state.pp, sizeof(server_state.pp));
+	
 
 	return;
 }
