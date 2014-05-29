@@ -130,9 +130,10 @@ void server_handle_packet(void *packet, unsigned long addr) {
 }
 
 
-void server_start() {
+void server_start(const char *game_name) {
 	server_init();
 	server_state.enabled = 1;
+	strcpy(server_state.name, game_name);
 
 	return;
 }

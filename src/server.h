@@ -32,11 +32,12 @@ struct server_player_state {
 	int				enabled;
 	struct server_player_list_e	plist[FARMER_COUNT];
 	struct sheep			shee[SHEEP_COUNT];
-	struct proto_packet		pp;	
+	struct proto_packet		pp;
+	char				name[PROTO_GAME_NAME_MAX];
 } server_state;
 
 void server_init();
-void server_start();
+void server_start(const char *game_name);
 void server_loop();
 void server_handle_packet(void *packet, unsigned long addr);
 
