@@ -1,3 +1,3 @@
-s year's attempt at a party hack for Birdie 24 gamedev compo
+This year's attempt at a party hack for Birdie 24 gamedev compo
 
 Name TBD.

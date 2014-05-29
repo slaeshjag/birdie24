@@ -1,0 +1,23 @@
+1 VERSIONINFO
+FILEVERSION     0,1,0,0
+PRODUCTVERSION  0,1,0,0
+BEGIN
+	BLOCK "StringFileInfo"
+	BEGIN
+		BLOCK "080904E4"
+		BEGIN
+			VALUE "FileDescription", "Birdie 24 partyhack for gamedev compo"
+			VALUE "FileVersion", "0.1"
+			VALUE "InternalName", "TBD"
+			VALUE "LegalCopyright", "Steven Arnow <s@rdw.se>, Axel Isaksson"
+			VALUE "OriginalFilename", "compo.exe"
+			VALUE "ProductName", "TBD"
+			VALUE "ProductVersion", "0.1"
+		END
+	END
+
+	BLOCK "VarFileInfo"
+	BEGIN
+		VALUE "Translation", 0x809, 1252
+	END
+END
