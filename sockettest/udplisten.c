@@ -11,7 +11,7 @@ int main(int argc, char **argv) {
 		.sin_family = AF_INET,
 		.sin_port = 1337,
 	}, recvaddr;
-	inet_pton(AF_INET, "0.0.0.0", &addr.sin_addr);
+	addr.sin_addr.s_addr = htonl(INADDR_ANY);
 	char buf[16];
 	char frombuf[32];
 	
