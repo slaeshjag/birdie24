@@ -8,12 +8,14 @@
 #define	PROTO_PLAYER_NAME		16
 #define	PROTO_MAP_NAME_MAX		16
 
-enum packet_type {
+enum proto_packet_type {
 	PROTO_TYPE_BROADCAST,
 	PROTO_TYPE_CONTROL,
 	PROTO_TYPE_JOIN,
+	PROTO_TYPE_KEEPALIVE,
 	PROTO_TYPE_LOBBY_STAT,
 	PROTO_TYPE_GAMESTATE,
+	PROTO_TYPE_JOIN_GREET,
 };
 
 struct proto_coord {
@@ -30,7 +32,7 @@ struct proto_farmer {
 };
 
 struct proto_packet {
-	enum packet_type		type;
+	enum proto_packet_type		type;
 
 	unsigned int			packet_cnt;
 	unsigned int			time_remain;
@@ -43,7 +45,7 @@ struct proto_packet {
 
 
 struct proto_control_packet {
-	enum packet_type		type;
+	enum proto_packet_type		type;
 
 	unsigned int			up	: 1;
 	unsigned int			left	: 1;
@@ -55,7 +57,7 @@ struct proto_control_packet {
 
 
 struct proto_control_broadcast {
-	enum packet_type		type;
+	enum proto_packet_type		type;
 	char 				game_name[PROTO_GAME_NAME_MAX];
 	char				map_name[PROTO_MAP_NAME_MAX];
 	unsigned int			slots;
@@ -64,9 +66,16 @@ struct proto_control_broadcast {
 
 
 struct proto_join_packet {
-	enum packet_type		type;
+	enum proto_packet_type		type;
 
 	char 				player_name[PROTO_PLAYER_NAME];
+};
+
+
+struct proto_join_greet {
+	enum proto_packet_type		type;
+
+	unsigned int			player_num;
 };
 
 
