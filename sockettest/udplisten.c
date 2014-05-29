@@ -12,6 +12,7 @@ int main(int argc, char **argv) {
 		.sin_port = 1337,
 	}, recvaddr;
 	addr.sin_addr.s_addr = htonl(INADDR_ANY);
+	addr.sin_port = htons(1337);
 	char buf[16];
 	char frombuf[32] = {};
 	

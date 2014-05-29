@@ -14,6 +14,8 @@ int main(int argc, char **argv) {
 		.sin_family = AF_INET,
 		.sin_port = 1337,
 	};
+	addr.sin_port = htons(1337);
+	sendaddr.sin_port = htons(1337);
 	addr.sin_addr.s_addr = htonl(INADDR_ANY);
 	inet_pton(AF_INET, "255.255.255.255", &sendaddr.sin_addr);
 	char buf[16] = "arne";
