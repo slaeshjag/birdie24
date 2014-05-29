@@ -1,3 +1,4 @@
+#include "farmer.h"
 #include "sheep.h"
 #include "limits.h"
 
@@ -8,8 +9,8 @@ struct sheep_gravity {
 
 
 void sheep_loop() {
+	#if 0
 	int i, j;
-
 
 	/* Counting sheep... Zzz... */
 	for (i = 0; i < SHEEP_COUNT; i++) {
@@ -25,6 +26,6 @@ void sheep_loop() {
 		/* When we know what farmer to run from */
 		/* TODO: Make sheep follow other sheep */
 	}
-
+	#endif
 	return;
 }

@@ -151,6 +151,16 @@ void server_loop() {
 		case GAME_STATE_GAME:
 			farmer_move();
 			break;
+		case GAME_STATE_LOBBY_HOST:
+			if (!(cnt & 0xF)) {
+				cb.type = PROTO_TYPE_BROADCAST;
+				strcpy(cb.game_name, "arne");
+				strcpy(cb.map_name, "arne.ldmz");
+				cb.slots = FARMER_COUNT;
+				cb.slots_left = FARMER_COUNT - server_get_players();
+				network_broadcast(&cb, sizeof(cb));
+			}
+			break;
 		default:
 			break;
 	}
@@ -162,20 +172,12 @@ void server_loop() {
 					network_send(server_state.plist[i].addr, &server_state.pp, sizeof(server_state.pp));
 					break;
 				case GAME_STATE_LOBBY_HOST:
-					if (!(cnt & 0xF)) {
-						cb.type = PROTO_TYPE_BROADCAST;
-						strcpy(cb.game_name, "arne");
-						strcpy(cb.map_name, "arne.ldmz");
-						cb.slots = FARMER_COUNT;
-						cb.slots_left = FARMER_COUNT - server_get_players();
-						network_send(server_state.plist[i].addr, &cb, sizeof(cb));
-					}
 					break;
 				default:
 					fprintf(stderr, "Shitter's full\n");
 			}
 	
-
+	cnt++;
 	
 
 	return;
