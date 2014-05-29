@@ -10,6 +10,31 @@ void server_init() {
 }
 
 
+void server_kick(int player) {
+	int i;
+	struct proto_join_packet jp;
+
+	jp.type = PROTO_TYPE_JOIN;
+	*jp.player_name = 0;
+	jp.player_id = -1; 
+
+	for (i = 0; i < FARMER_COUNT; i++)
+		network_send(server_state.plist[player].addr, &jp, sizeof(jp));
+	return;
+}
+
+
+void server_check_alive() {
+	int i;
+
+	for (i = 0; i < FARMER_COUNT; i++)
+		if (server_state.plist[i].used)
+			if (server_state.plist[i].timeout++ >= SERVER_FARMER_SLEEPING)
+				server_kick(i);
+	return;
+}
+
+
 void server_handle_join(struct proto_join_packet *pj, unsigned long addr) {
 	int i;
 	struct proto_join_greet jg;
@@ -93,6 +118,8 @@ void server_handle_packet(void *packet, unsigned long addr) {
 
 void server_loop() {
 	struct proto_packet pp;
+	
+	server_check_alive();
 	/* TODO: state machine? */
 
 	/* Do this per player */

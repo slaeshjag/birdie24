@@ -2,6 +2,8 @@
 #define	__SERVER_H__
 
 #define	SERVER_PORT			34543
+#define	SERVER_FARMER_SLEEPING		500
+
 
 #include "farmer.h"
 #include "proto.h"
@@ -9,7 +11,7 @@
 
 struct server_player_list_e {
 	int				used;
-	char				player_name[16];
+	char				player_name[PROTO_PLAYER_NAME];
 	/* Does not work for IPv6. But it's less than 24 hours to deadline #YOLO */
 	unsigned long			addr;
 	int				timeout;
