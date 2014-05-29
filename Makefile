@@ -3,7 +3,7 @@ MAKEFLAGS	+=	--no-print-directory
 
 TOPDIR		=	$(shell pwd)
 export TOPDIR
-include config.common.mk
+include config.mk
 
 .PHONY: all lib install strip clean
 
