@@ -113,7 +113,7 @@ void lobby_loop() {
 }
 
 void lobby_host_loop() {
-	
+	server_loop();
 }
 
 void lobby_join_loop() {
