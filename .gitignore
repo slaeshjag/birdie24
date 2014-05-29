@@ -1,4 +1,6 @@
 bin/
+udptest/udpbroadcast
+udptest/udplisten
 *.o
 *.swp
 *.swo
