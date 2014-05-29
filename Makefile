@@ -10,6 +10,7 @@ include config.mk
 all:
 	@echo " [INIT] bin/"
 	@$(MKDIR) bin/
+	@$(CP) -R res bin/
 	@echo " [ CD ] src/"
 	+@make -C src/
 	
