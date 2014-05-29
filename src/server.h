@@ -32,5 +32,6 @@ struct server_player_state {
 
 void server_init();
 void server_loop();
+void server_handle_packet(void *packet, unsigned long addr);
 
 #endif

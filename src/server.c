@@ -1,11 +1,13 @@
 #include "proto.h"
 #include "network.h"
 #include "server.h"
+#include "main.h"
 #include <string.h>
 
 
 void server_init() {
 	memset(&server_state, 0, sizeof(server_state));
+	server_state.pp.type = PROTO_TYPE_GAMESTATE;
 	return;
 }
 
@@ -127,6 +129,8 @@ void server_start() {
 
 
 void server_loop() {
+	static int cnt;
+	struct proto_control_broadcast cb;
 	int i;
 
 	if (!server_state.enabled)
@@ -137,8 +141,25 @@ void server_loop() {
 	/* Do this per player */
 	for (i = 0; i < FARMER_COUNT; i++)
 		if (server_state.plist[i].used)
-			/* TODO: Check if in game state */
-			network_send(server_state.plist[i].addr, &server_state.pp, sizeof(server_state.pp));
+			switch (config.game_state) {
+				case GAME_STATE_GAME:
+					network_send(server_state.plist[i].addr, &server_state.pp, sizeof(server_state.pp));
+					break;
+				case GAME_STATE_LOBBY:
+					if (!(cnt & 0xF)) {
+						cb.type = PROTO_TYPE_BROADCAST;
+						strcpy(cb.game_name, "arne");
+						strcpy(cb.map_name, "arne.ldmz");
+						cb.slots = FARMER_COUNT;
+						cb.slots_left = FARMER_COUNT;
+						network_send(server_state.plist[i].addr, &cb, sizeof(cb));
+					}
+					break;
+				default:
+					fprintf(stderr, "Shitter's full\n");
+			}
+	
+
 	
 
 	return;
