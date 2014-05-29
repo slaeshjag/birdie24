@@ -13,7 +13,7 @@ int main(int argc, char **argv) {
 	}, recvaddr;
 	addr.sin_addr.s_addr = htonl(INADDR_ANY);
 	char buf[16];
-	char frombuf[32];
+	char frombuf[32] = {};
 	
 	if((sock = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
 		printf("nein.\n");
@@ -32,7 +32,7 @@ int main(int argc, char **argv) {
 	for(;;) {
 		socklen_t len = sizeof(recvaddr);
 		recvfrom(sock, buf, 16, 0, (struct sockaddr *) &recvaddr, &len);
-		inet_ntop(AF_INET, &recvaddr, frombuf, 32);
+		inet_ntop(AF_INET, &recvaddr.sin_addr, frombuf, 32);
 		printf("got '%s' from %s\n", buf, frombuf);
 	}
 	
