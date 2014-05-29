@@ -15,6 +15,7 @@ CFLAGS		+=	-Wall $(INCS) $(DBGFLAGS)
 LDFLAGS		+=	-ldarnit
 RM		=	rm -fR
 MKDIR		=	mkdir -p
+CP		=	cp
 
 ifneq ($(wildcard /etc/debian_version),) 
 	#Debian packaging
