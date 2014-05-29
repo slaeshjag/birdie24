@@ -29,10 +29,18 @@ ifeq ($(strip $(OS)), Windows_NT)
 	LDFLAGS	+=	-lws2_32
 	BIN	=	"$(TOPDIR)/bin/$(NAME).exe"
 else
+ifeq ($(BUILDFOR), WIN32)
+	CC	=	i586-mingw32msvc-gcc
+	STRIP	=	i586-mingw32msvc-strip
+	AR	=	i586-mingw32msvc-ar
+	LDFLAGS	+=	-lws2_32
+	BIN	=	"$(TOPDIR)/bin/$(NAME).exe"
+else
 ifeq ($(strip $(SBOX_UNAME_MACHINE)), arm)
 	#Maemo packaging
 	PACKAGE	:=	$(NAME)-$(VERSION)maemo.deb
 	SECTION	:=	user/games
 	DEPS	=	libc6, libsdl-gles1.2-1, libbz2-1.0, zlib1g
+endif
 endif
 endif
