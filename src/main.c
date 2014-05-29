@@ -14,6 +14,8 @@ static void (*state_loop[GAME_STATES])() = {
 	[GAME_STATE_MENU] = menu_loop,
 	[GAME_STATE_LOBBY_PLAYERNAME] = lobby_playername_loop,
 	[GAME_STATE_LOBBY] = lobby_loop,
+	[GAME_STATE_LOBBY_HOST] = lobby_host_loop,
+	[GAME_STATE_LOBBY_JOIN] = lobby_join_loop,
 	[GAME_STATE_GAME] = game_loop,
 };
 
@@ -21,8 +23,28 @@ struct Config config = {
 	.game_state = GAME_STATE_LOBBY_PLAYERNAME,
 };
 
-void init_res() {
+static void init_res() {
 	config.font_std = d_font_load("res/DejaVuSans.ttf", 24, 256, 256);
+	config.platform = d_platform_get();
+}
+
+void game_state(enum GameState new_state) {
+	DARNIT_KEYS keys;
+	/*Destructors*/
+	switch(config.game_state) {
+		default:
+			break;
+	}
+	
+	keys = d_keys_get();
+	d_keys_set(keys);
+	
+	config.game_state = new_state;
+	/*Contructors*/
+	switch(config.game_state) {
+		default:
+			break;
+	}
 }
 
 int main(int argc, char **argv) {

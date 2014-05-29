@@ -9,7 +9,7 @@ BEGIN
 			VALUE "FileDescription", "Birdie 24 partyhack for gamedev compo"
 			VALUE "FileVersion", "0.1"
 			VALUE "InternalName", "TBD"
-			VALUE "LegalCopyright", "Steven Arnow <s@rdw.se>, Axel Isaksson"
+			VALUE "LegalCopyright", "Steven Arnow <s@rdw.se>, Axel Isaksson <isaksson.axel@telia.com>"
 			VALUE "OriginalFilename", "compo.exe"
 			VALUE "ProductName", "TBD"
 			VALUE "ProductVersion", "0.1"
