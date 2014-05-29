@@ -9,6 +9,7 @@
 #include "game.h"
 #include "proto.h"
 #include "lobby.h"
+#include "server.h"
 
 static void (*state_loop[GAME_STATES])() = {
 	[GAME_STATE_MENU] = menu_loop,
@@ -42,6 +43,11 @@ void game_state(enum GameState new_state) {
 	config.game_state = new_state;
 	/*Contructors*/
 	switch(config.game_state) {
+		case GAME_STATE_LOBBY_HOST:
+			network_init(PORT);
+			client_init();
+			server_start();
+			break;
 		default:
 			break;
 	}

@@ -4,6 +4,9 @@
 #include <string.h>
 #include <darnit/darnit.h>
 
-void game_loop() {
+#include "game.h"
+#include "server.h"
 
+void game_loop() {
+	server_loop();
 }
