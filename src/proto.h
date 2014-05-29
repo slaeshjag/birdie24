@@ -25,6 +25,8 @@ enum proto_packet_type {
 struct proto_coord {
 	unsigned int			x	: 12;
 	unsigned int			y	: 12;
+	unsigned int			dir	: 4;
+	unsigned int			moving	: 1;
 } __attribute__((packed));
 
 

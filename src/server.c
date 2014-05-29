@@ -38,6 +38,16 @@ void server_check_alive() {
 }
 
 
+int server_get_players() {
+	int i, j;
+
+	for (i = j = 0; i < FARMER_COUNT; i++)
+		if (server_state.plist[i].used)
+			j++;
+	return j;
+}
+
+
 void server_handle_join(struct proto_join_packet *pj, unsigned long addr) {
 	int i;
 	struct proto_join_greet jg;
@@ -138,7 +148,14 @@ void server_loop() {
 	server_check_alive();
 	/* TODO: state machine? */
 
-	/* Do this per player */
+	switch (config.game_state) {
+		case GAME_STATE_GAME:
+			farmer_move();
+			break;
+		default:
+			break;
+	}
+
 	for (i = 0; i < FARMER_COUNT; i++)
 		if (server_state.plist[i].used)
 			switch (config.game_state) {
@@ -151,7 +168,7 @@ void server_loop() {
 						strcpy(cb.game_name, "arne");
 						strcpy(cb.map_name, "arne.ldmz");
 						cb.slots = FARMER_COUNT;
-						cb.slots_left = FARMER_COUNT;
+						cb.slots_left = FARMER_COUNT - server_get_players();
 						network_send(server_state.plist[i].addr, &cb, sizeof(cb));
 					}
 					break;

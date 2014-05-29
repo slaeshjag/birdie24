@@ -16,6 +16,9 @@ struct server_player_list_e {
 	unsigned long			addr;
 	int				timeout;
 
+	int				x;
+	int				y;
+
 	/* Key status */
 	unsigned int			left;
 	unsigned int			right;
