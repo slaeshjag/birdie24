@@ -30,6 +30,9 @@ clean:
 	@echo "Source tree cleaned."
 	@echo
 
+windows-release: all
+	@cp /usr/i586-mingw32msvc/lib/libdarnit.dll bin/
+
 strip:
 	@echo " [STRP] bin/"
 	@strip $(LIB)
