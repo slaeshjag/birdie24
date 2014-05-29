@@ -2,6 +2,7 @@
 #define	__PROTO_H__
 
 #include <stdio.h>
+#include <stdint.h>
 #include "sheep.h"
 #include "farmer.h"
 
@@ -17,6 +18,8 @@ enum proto_packet_type {
 	PROTO_TYPE_LOBBY_STAT,
 	PROTO_TYPE_GAMESTATE,
 	PROTO_TYPE_JOIN_GREET,
+	PROTO_TYPE_IDLE_BROADCAST,
+	PROTO_TYPE_CHAT,
 };
 
 struct proto_coord {
@@ -66,10 +69,27 @@ struct proto_control_broadcast {
 };
 
 
+struct proto_idling_broadcast {
+	enum proto_packet_type		type;
+
+	char				player_name[PROTO_PLAYER_NAME];
+};
+
+
+struct proto_chat {
+	enum proto_packet_type		type;
+
+	char				player_name[PROTO_PLAYER_NAME];
+	int				broadcast;
+};
+
+
 struct proto_join_packet {
 	enum proto_packet_type		type;
 
 	char 				player_name[PROTO_PLAYER_NAME];
+	int				player_id;
+	uint32_t			addr;
 };
 
 

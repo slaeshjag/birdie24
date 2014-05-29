@@ -12,6 +12,13 @@ struct server_player_list_e {
 	char				player_name[16];
 	/* Does not work for IPv6. But it's less than 24 hours to deadline #YOLO */
 	unsigned long			addr;
+	int				timeout;
+
+	/* Key status */
+	unsigned int			left;
+	unsigned int			right;
+	unsigned int			up;
+	unsigned int			down;
 };
 
 
@@ -19,5 +26,7 @@ struct server_player_state {
 	struct server_player_list_e	plist[FARMER_COUNT];
 	struct proto_packet		pp;
 } server_state;
+
+void server_init();
 
 #endif

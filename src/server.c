@@ -3,20 +3,16 @@
 #include "server.h"
 #include <string.h>
 
-void server_fill_packet() {
-	/* TODO: Copy over the internal server state to here */
 
+void server_init() {
+	memset(&server_state, 0, sizeof(server_state));
 	return;
 }
 
 
-void server_handle_join(struct proto_join_packet *pj, int len, unsigned long addr) {
+void server_handle_join(struct proto_join_packet *pj, unsigned long addr) {
 	int i;
-
-	if (len < sizeof(*pj)) {
-		fprintf(stderr, "Packet too short in server_handle_join\n");
-		return;
-	}
+	struct proto_join_greet jg;
 
 	for (i = 0; i < FARMER_COUNT; i++)
 		if (!server_state.plist[i].used)
@@ -26,12 +22,33 @@ void server_handle_join(struct proto_join_packet *pj, int len, unsigned long add
 	pj->player_name[PROTO_PLAYER_NAME - 1] = 0;
 	strcpy(server_state.plist[i].player_name, pj->player_name);
 	server_state.plist[i].addr = addr;
+	server_state.plist[i].timeout = 0;
 
-	/* TODO: Emit join greet */
+	/* Emit join greet */
+	jg.type = PROTO_TYPE_JOIN_GREET;
+	jg.player_num = i;
+	network_send(addr, &jg, sizeof(jg));
+
+	pj->player_id = i;
+	for (i = 0; i < FARMER_COUNT; i++)
+		if (server_state.plist[i].used)
+			network_send(server_state.plist[i].addr, pj, sizeof(*pj));
 
 	return;
 }
 
+
+void server_handle_control(struct proto_control_packet *cp, int player_id) {
+	if (player_id < 0)
+		return;
+	server_state.plist[player_id].up = cp->up;
+	server_state.plist[player_id].down = cp->down;
+	server_state.plist[player_id].left = cp->left;
+	server_state.plist[player_id].right = cp->right;
+	server_state.pp.farmer[player_id].action_yell = cp->yell;
+	server_state.pp.farmer[player_id].action_stab = cp->stab;
+	return;
+}
 
 int server_get_player(unsigned long addr) {
 	int i;
@@ -43,7 +60,9 @@ int server_get_player(unsigned long addr) {
 }
 
 
-void server_handle_packet(void *packet, int len, unsigned long addr) {
+void server_handle_packet(void *packet, unsigned long addr) {
+	int p;
+
 	switch (*((enum proto_packet_type *) packet)) {
 		case PROTO_TYPE_BROADCAST:
 		case PROTO_TYPE_LOBBY_STAT:
@@ -53,13 +72,18 @@ void server_handle_packet(void *packet, int len, unsigned long addr) {
 			fprintf(stderr, "Herpaderp wrong packet type %i\n", *((enum proto_packet_type *) packet));
 			break;
 		case PROTO_TYPE_CONTROL:
-			fprintf(stderr, "STUB: Handle control packet\n");
+			server_handle_control(packet, server_get_player(addr));
 			break;
 		case PROTO_TYPE_KEEPALIVE:
-			fprintf(stderr, "STUB: Handle keep-alive packet\n");
+			if ((p = server_get_player(addr)) < 0) {
+				fprintf(stderr, "Keepalive from irrelevant player with addr 0x%X\n", (unsigned int) addr);
+				return;
+			}
+
+			server_state.plist[p].timeout = 0;
 			break;
 		case PROTO_TYPE_JOIN:
-			server_handle_join(packet, len, addr);
+			server_handle_join(packet, addr);
 			break;
 	}
 
