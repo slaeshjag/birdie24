@@ -7,6 +7,7 @@
 #include "main.h"
 #include "menu.h"
 #include "game.h"
+#include "proto.h"
 
 static void (*state_loop[GAME_STATES])() = {
 	menu_loop,
@@ -19,6 +20,7 @@ static struct Config config = {
 
 int main(int argc, char **argv) {
 	d_init_custom("birdie24", 800, 600, false, "birdie24", NULL);
+	proto_init();
 	
 	for(;;) {
 		d_render_begin();
