@@ -1,6 +1,7 @@
 #ifndef __PROTO_H__
 #define	__PROTO_H__
 
+#include <stdio.h>
 #include "sheep.h"
 #include "farmer.h"
 

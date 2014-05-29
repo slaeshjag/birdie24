@@ -1,6 +1,8 @@
 #ifndef __NETWORK_H_
 #define __NETWORK_H_
 
+#include <stdlib.h>
+
 #define PORT 1337
 
 int network_init(int port);

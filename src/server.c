@@ -1,5 +1,6 @@
 #include "proto.h"
 #include "network.h"
+#include "server.h"
 #include <string.h>
 
 void server_fill_packet() {
@@ -17,10 +18,10 @@ void server_handle_join(struct proto_join_packet *pj, int len, unsigned long add
 		return;
 	}
 
-	for (i = 0; i < PLAYER_MAX; i++)
+	for (i = 0; i < FARMER_COUNT; i++)
 		if (!server_state.plist[i].used)
 			break;
-	if (i == PLAYER_MAX)
+	if (i == FARMER_COUNT)
 		return;
 	pj->player_name[PROTO_PLAYER_NAME - 1] = 0;
 	strcpy(server_state.plist[i].player_name, pj->player_name);
@@ -35,7 +36,7 @@ void server_handle_join(struct proto_join_packet *pj, int len, unsigned long add
 int server_get_player(unsigned long addr) {
 	int i;
 
-	for (i = 0; i < PLAYER_MAX; i++)
+	for (i = 0; i < FARMER_COUNT; i++)
 		if (server_state.plist[i].addr == addr)
 			return i;
 	return -1;
@@ -47,8 +48,9 @@ void server_handle_packet(void *packet, int len, unsigned long addr) {
 		case PROTO_TYPE_BROADCAST:
 		case PROTO_TYPE_LOBBY_STAT:
 		case PROTO_TYPE_GAMESTATE:
+		case PROTO_TYPE_JOIN_GREET:
 		default:
-			fprintf(stderr, "Herpaderp wrong packet type %i\n");
+			fprintf(stderr, "Herpaderp wrong packet type %i\n", *((enum proto_packet_type *) packet));
 			break;
 		case PROTO_TYPE_CONTROL:
 			fprintf(stderr, "STUB: Handle control packet\n");

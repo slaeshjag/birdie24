@@ -3,6 +3,7 @@
 
 #define	SERVER_PORT			34543
 
+#include "farmer.h"
 #include "proto.h"
 #include "network.h"
 
@@ -15,7 +16,7 @@ struct server_player_list_e {
 
 
 struct server_player_state {
-	struct server_plater_list_e	plist[PLAYER_MAX];
+	struct server_player_list_e	plist[FARMER_COUNT];
 	struct proto_packet		pp;
 } server_state;
 
