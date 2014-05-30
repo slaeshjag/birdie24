@@ -154,8 +154,10 @@ void farmer_move_loop(int farmer) {
 void farmer_stab(int src) {
 	int target;
 	target = farmer_get_farmer_facing(src);
-	if (target >= 0)
+	if (target >= 0) {
 		server_state.plist[target].stab_timeout = FARMER_STAB_TIME;
+		server_state.plist[target].stab_direction = server_state.pp.farmer[src].coord.dir;
+	}
 
 	return;
 }
@@ -166,8 +168,8 @@ void farmer_move() {
 
 	for (i = 0; i < FARMER_COUNT; i++) {
 		if (server_state.plist[i].stab_timeout) {
-			server_state.plist[i].dx += farmer_stunn_x_vel[server_state.pp.farmer[i].coord.dir >> 1];
-			server_state.plist[i].dy += farmer_stunn_y_vel[server_state.pp.farmer[i].coord.dir >> 1];
+			server_state.plist[i].dx += farmer_stunn_x_vel[server_state.plist[i].stab_direction >> 1] * 5;
+			server_state.plist[i].dy += farmer_stunn_y_vel[server_state.plist[i].stab_direction >> 1] * 5;
 			server_state.plist[i].stab_timeout--;
 			goto update;
 		}
