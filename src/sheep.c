@@ -4,6 +4,8 @@
 #include "main.h"
 #include <limits.h>
 
+#define	ABS(x)		((x) < 0 ? (x) : -(x))
+
 struct sheep_gravity {
 	int			dx;
 	int			dy;
@@ -35,23 +37,25 @@ void sheep_spawn() {
 
 
 void sheep_loop() {
-	#if 0
 	int i, j;
+	struct sheep_gravity g[FARMER_COUNT];
 
 	/* Counting sheep... Zzz... */
 	for (i = 0; i < SHEEP_COUNT; i++) {
 		for (j = 0; j < FARMER_COUNT; i++) {
-			dx = server_state.sheep[i].x - server_state.plist[j].x;
-			dy = server_state.sheep[i].x - server_state.plist[j].y;
-			if (dx * dx + dy * dy < dist_c) {
-				farmer_c = j;
-				dist_c = dx * dx + dy * dy;
-			}
+//			g[j] = (
 		}
 		
 		/* When we know what farmer to run from */
 		/* TODO: Make sheep follow other sheep */
+
+
+		for (i = 0; i < SHEEP_COUNT; i++) {
+			server_state.pp.sheep[i].x = server_state.sheep[i].x / 1000;
+			server_state.pp.sheep[i].y = server_state.sheep[i].y / 1000;
+			server_state.pp.sheep[i].dir = 0;
+			server_state.pp.sheep[i].moving = 0;
+		}
 	}
-	#endif
 	return;
 }
