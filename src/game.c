@@ -131,7 +131,7 @@ void game_loop() {
 		packet.type = PROTO_TYPE_CONTROL;
 		network_send(config.server.addr, &packet, sizeof(struct proto_control_packet));
 	}
-	
+	d_text_surface_draw(game.text);
 	tick++;
 	tick %= 3;
 }
