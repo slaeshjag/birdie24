@@ -155,7 +155,7 @@ void server_loop() {
 		case GAME_STATE_LOBBY_HOST:
 			if (!(cnt & 0xF)) {
 				cb.type = PROTO_TYPE_BROADCAST;
-				strcpy(cb.game_name, "arne");
+				strcpy(cb.game_name, server_state.name);
 				strcpy(cb.map_name, "arne.ldmz");
 				cb.slots = FARMER_COUNT;
 				cb.slots_left = FARMER_COUNT - server_get_players();
