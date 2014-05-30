@@ -48,6 +48,7 @@ static void init_res() {
 	config.menu_background = d_render_tilesheet_load("res/menu.png", 800, 600, DARNIT_PFORMAT_RGBA8);
 	config.spriteset = d_render_tilesheet_load("res/sprites.png", 16, 16, DARNIT_PFORMAT_RGBA8);
 	config.map = d_map_load("res/main.ldmz");
+	config.music_hillbilly = d_sound_streamed_load("res/hillbilly.ogg", DARNIT_AUDIO_STREAM, DARNIT_AUDIO_STEREO);
 	config.platform = d_platform_get();
 
 	d_keymapping_set(keymap);
@@ -59,6 +60,9 @@ void game_state(enum GameState new_state) {
 	DARNIT_KEYS keys;
 	/*Destructors*/
 	switch(config.game_state) {
+		case GAME_STATE_GAME:
+			d_sound_stop_all();
+			break;
 		default:
 			break;
 	}
@@ -88,6 +92,9 @@ void game_state(enum GameState new_state) {
 			while(!config.server.connected)
 				server_loop();
 			printf("connected.\n");
+			break;
+		case GAME_STATE_GAME:
+			d_sound_play(config.music_hillbilly, true, 127, 127, 0);
 			break;
 		default:
 			break;
