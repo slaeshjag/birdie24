@@ -31,6 +31,8 @@ static void init_res() {
 	config.tileset = d_render_tilesheet_load("res/sprites.png", 16, 16, DARNIT_PFORMAT_RGBA8);
 	config.map = d_map_load("res/main.ldmz");
 	config.platform = d_platform_get();
+	sheep_prepare();
+
 }
 
 void game_state(enum GameState new_state) {

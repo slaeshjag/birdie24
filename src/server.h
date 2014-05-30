@@ -19,6 +19,8 @@ struct server_player_list_e {
 
 	int				x;
 	int				y;
+	int				dx;
+	int				dy;
 
 	/* Key status */
 	unsigned int			left;
@@ -35,6 +37,8 @@ struct server_player_state {
 	struct proto_packet		pp;
 	char				name[PROTO_GAME_NAME_MAX];
 	char				map[PROTO_MAP_NAME_MAX];
+
+	unsigned int			sheep_collide[SHEEP_COUNT];
 } server_state;
 
 void server_init();

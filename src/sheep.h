@@ -1,7 +1,7 @@
 #ifndef __SHEEP_H__
 #define	__SHEEP_H__
 
-#define	SHEEP_COUNT		99
+#define	SHEEP_COUNT		39
 #define	SHEEP_AVOID_RADIUS	140
 
 struct Sheep {
@@ -20,5 +20,6 @@ void sheep_init();
 
 void sheep_spawn();
 void sheep_loop();
+int sheep_test_collide(int x, int y);
 
 #endif
