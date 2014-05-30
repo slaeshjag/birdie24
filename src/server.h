@@ -31,7 +31,7 @@ struct server_player_list_e {
 struct server_player_state {
 	int				enabled;
 	struct server_player_list_e	plist[FARMER_COUNT];
-	struct sheep			sheep[SHEEP_COUNT];
+	struct Sheep			sheep[SHEEP_COUNT];
 	struct proto_packet		pp;
 	char				name[PROTO_GAME_NAME_MAX];
 	char				map[PROTO_MAP_NAME_MAX];

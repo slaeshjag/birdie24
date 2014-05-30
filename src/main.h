@@ -21,6 +21,8 @@ struct Config {
 	DARNIT_PLATFORM platform;
 	
 	DARNIT_FONT *font_std;
+	DARNIT_TILESHEET *tileset;
+	
 	char player_name[PROTO_PLAYER_NAME];
 	
 	struct {
