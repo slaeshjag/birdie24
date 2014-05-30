@@ -7,7 +7,7 @@
 
 #include <windows.h>
 
-#define pthread_t HANDLE;
+#define pthread_t HANDLE
 #define pthread_create(handle, nc1, func, nc2) (*handle = CreateThread(NULL, 0, (func), NULL, 0, NULL))
 #define pthread_cancel(thread) (TerminateThread((thread), 0))
 
