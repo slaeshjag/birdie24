@@ -35,6 +35,11 @@ struct Config {
 	} server;
 } extern config;
 
+struct List {
+	void *value;
+	struct List *next;
+};
+
 void game_state(enum GameState new_state);
 
 #endif

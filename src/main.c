@@ -46,13 +46,15 @@ void game_state(enum GameState new_state) {
 	config.game_state = new_state;
 	/*Contructors*/
 	switch(config.game_state) {
-		case GAME_STATE_LOBBY_HOST:
+		case GAME_STATE_LOBBY:
 			if(network_init(PORT) < 0) {
 				printf("nooooes\n");
-				new_state = GAME_STATE_LOBBY;
+				new_state = GAME_STATE_MENU;
 				goto redo;
 			}
 			client_init();
+			break;
+		case GAME_STATE_LOBBY_HOST:
 			strcpy(config.server.name, "arne");
 			server_start("arne");
 			while(!config.server.connected)

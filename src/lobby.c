@@ -4,9 +4,12 @@
 #include <string.h>
 #include <darnit/darnit.h>
 
+#include "lobby.h"
 #include "main.h"
 #include "proto.h"
 #include "server.h"
+
+struct LobbyClient lobby_client;
 
 static struct {
 	DARNIT_TEXT_SURFACE *text_playername;
@@ -30,9 +33,7 @@ static struct {
 	int selected_game;
 } lobby;
 
-static const char *text_host = "[Host game]";
-
-static void update_lists(const char **player, int players, const char **game, int games) {
+static void update_lists(struct List *player, struct List *game) {
 	int i;
 	
 	d_text_surface_reset(lobby.list_players);
@@ -43,6 +44,7 @@ static void update_lists(const char **player, int players, const char **game, in
 	d_text_surface_color_next(lobby.list_games, 255, 255, 255);
 	d_text_surface_string_append(lobby.list_games, "Games\n\n");
 	
+	#if 0
 	for(i = 0; i < players; i++) {
 		/*if(i == lobby.selected_player) {
 			d_text_surface_color_next(lobby.list_players, 255, 0, 0);
@@ -51,14 +53,16 @@ static void update_lists(const char **player, int players, const char **game, in
 		/*}*/
 		d_text_surface_string_append(lobby.list_players, player[i]);
 	}
+	#endif
 	
-	for(i = 0; i < games; i++) {
+	for(i = 0; game; i++, game = game->next) {
 		if(i == lobby.selected_game) {
 			d_text_surface_color_next(lobby.list_games, 255, 0, 0);
 		} else {
 			d_text_surface_color_next(lobby.list_games, 255, 255, 255);
 		}
-		d_text_surface_string_append(lobby.list_games, game[i]);
+		d_text_surface_string_append(lobby.list_games, ((struct LobbyHost *) (game->value))->name);
+		d_text_surface_string_append(lobby.list_games, "\n");
 	}
 }
 
@@ -75,6 +79,7 @@ static void update_player_list(DARNIT_TEXT_SURFACE *surface, char player[][PROTO
 			continue;
 		d_text_surface_color_next(surface, 255, 255, 255);
 		d_text_surface_string_append(surface, player[i]);
+		d_text_surface_char_append(surface, "\n");
 	}
 }
 
@@ -91,12 +96,15 @@ void lobby_init() {
 	d_text_surface_color_next(lobby_host.start_game, 255, 0, 0);
 	d_text_surface_string_append(lobby_host.start_game, "Start game");
 	
-	update_lists(NULL, 0, &text_host, 1);
+	update_lists(NULL, lobby_client.client);
 	
 	lobby_playername.text_playername = d_text_surface_new(config.font_std, 64, 1024, 64, 64);
 	lobby_playername.inputfield_playername = d_menu_textinput_new(64, 128, config.font_std, config.player_name, PROTO_PLAYER_NAME - 1, config.platform.screen_w);
 	
 	d_text_surface_string_append(lobby_playername.text_playername, "Enter your player name:");
+	
+	lobby.selected_game = 0;
+	lobby.selected_player = 0;
 }
 
 void lobby_playername_loop() {
@@ -116,7 +124,11 @@ void lobby_playername_loop() {
 }
 
 void lobby_loop() {
+	static int tick = 0;
 	DARNIT_KEYS keys;
+	int i;
+	struct List *game = lobby_client.client;
+	
 	d_render_line_draw(lobby.line, 1);
 	d_text_surface_draw(lobby.list_players);
 	d_text_surface_draw(lobby.list_games);
@@ -124,12 +136,15 @@ void lobby_loop() {
 	keys = d_keys_get();
 	d_keys_set(keys);
 	
+	if(!tick) {
+		update_lists(NULL, lobby_client.client);
+	}
+	
 	if(keys.up) {
 		if(lobby.selected_game > 0)
 			lobby.selected_game--;
 	} else if(keys.down) {
-		//TODO: fiiiiiiiix
-		if(lobby.selected_game < 9000)
+		if(lobby.selected_game < lobby_client.clients)
 			lobby.selected_game++;
 	}
 	
@@ -137,20 +152,45 @@ void lobby_loop() {
 		if(lobby.selected_game == 0) {
 			game_state(GAME_STATE_LOBBY_HOST);
 		} else {
+			//TODO: join
+			for(i = 0; game; i++, game = game->next) {
+				if(i == lobby.selected_game) {
+					config.server.addr = ((struct LobbyHost *) (game->value))->addr;
+					goto join;
+				}
+			}
+			game_state(GAME_STATE_LOBBY_HOST);
+			return;
+			join:
 			game_state(GAME_STATE_LOBBY_JOIN);
 		}
 	}
+	tick++;
+	tick %= 3;
 }
 
 void lobby_join_loop() {
+	struct proto_join_packet packet;
+	static int tick = 0;
 	DARNIT_KEYS keys;
 	
 	keys = d_keys_get();
 	d_keys_set(keys);
 	
+	if(!tick) {
+		packet.type = PROTO_TYPE_JOIN;
+		packet.player_id = -1;
+		strcpy(packet.player_name, config.player_name);
+		network_send(config.server.addr, &packet, sizeof(struct proto_join_packet));
+		update_player_list(lobby_join.list_players, config.player.player);
+	}
+	
 	if(keys.select) {
 		game_state(GAME_STATE_LOBBY);
 	}
+	
+	tick++;
+	tick %= 3;
 }
 
 void lobby_host_loop() {
