@@ -69,6 +69,9 @@ void *client_recv(void *arg) {
 				
 				break;
 			case PROTO_TYPE_GAMESTATE:
+				if(config.game_state == GAME_STATE_LOBBY_JOIN) {
+					game_state(GAME_STATE_GAME);
+				}
 				packet_game = (void *) &packet;
 				for(i = 0; i < SHEEP_COUNT; i++) {
 					game.sheep.sheep[i].x = packet_game->sheep[i].x;

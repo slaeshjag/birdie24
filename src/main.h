@@ -21,6 +21,7 @@ struct Config {
 	DARNIT_PLATFORM platform;
 	
 	DARNIT_FONT *font_std;
+	DARNIT_FONT *font_big;
 	DARNIT_TILESHEET *tileset;
 	DARNIT_MAP *map;
 	

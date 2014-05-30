@@ -23,11 +23,12 @@ static void (*state_loop[GAME_STATES])() = {
 };
 
 struct Config config = {
-	.game_state = GAME_STATE_LOBBY_PLAYERNAME,
+	.game_state = GAME_STATE_MENU,
 };
 
 static void init_res() {
 	config.font_std = d_font_load("res/DejaVuSans.ttf", 24, 256, 256);
+	config.font_big = d_font_load("res/DejaVuSans.ttf", 64, 256, 256);
 	config.tileset = d_render_tilesheet_load("res/sprites.png", 16, 16, DARNIT_PFORMAT_RGBA8);
 	config.map = d_map_load("res/main.ldmz");
 	config.platform = d_platform_get();
@@ -75,6 +76,7 @@ int main(int argc, char **argv) {
 	proto_init();
 	lobby_init();
 	game_init();
+	menu_init();
 	
 	for(;;) {
 		d_render_begin();
