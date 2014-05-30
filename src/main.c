@@ -55,8 +55,8 @@ void game_state(enum GameState new_state) {
 			client_init();
 			break;
 		case GAME_STATE_LOBBY_HOST:
-			strcpy(config.server.name, "arne");
-			server_start("arne");
+			strcpy(config.server.name, config.player_name);
+			server_start(config.server.name);
 			while(!config.server.connected)
 				server_loop();
 			printf("connected.\n");
