@@ -12,6 +12,8 @@ all:
 	@$(MKDIR) bin/
 	@echo " [INIT] bin/res/"
 	@$(CP) -R res bin/
+	@$(CP) README.md bin/
+	@$(CP) src/run.sh bin/
 	@echo " [ CD ] src/"
 	+@make -C src/
 	@echo " [ CD ] map/"

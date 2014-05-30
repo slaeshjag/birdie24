@@ -131,6 +131,7 @@ void lobby_playername_loop() {
 void lobby_playername_wait() {
 	//d_menu_selection_wait(lobby_playername.inputfield_playername);
 	lobby_playername.inputfield_playername = d_menu_textinput_new(64, 128, config.font_std, config.player_name, PROTO_PLAYER_NAME - 1, config.platform.screen_w);
+	lobby.selected_game = 0;
 }
 
 void lobby_loop() {

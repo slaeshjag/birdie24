@@ -99,7 +99,7 @@ void game_loop() {
 	sprintf(tmp, "Timer: %i", config.timer);
 	d_text_surface_string_append(game.text, tmp);
 	for(i = 0; i < FARMER_COUNT; i++) {
-		sprintf(tmp, "    Scrore player %i: %i", i + 1, config.points[i]);
+		sprintf(tmp, "    Scrore player %s: %i", config.player.player[i], config.points[i]);
 		d_text_surface_string_append(game.text, tmp);
 		d_sprite_move(game.farmer.sprite[i], game.farmer.farmer[i].x, game.farmer.farmer[i].y);
 		d_sprite_rotate(game.farmer.sprite[i], game.farmer.farmer[i].angle);
@@ -134,4 +134,7 @@ void game_loop() {
 	d_text_surface_draw(game.text);
 	tick++;
 	tick %= 3;
+	if(d_sound_playback_status(config.music_handle) == 0) {
+		config.music_handle = d_sound_play(config.music_hillbilly, true, 127, 127, 0);
+	}
 }

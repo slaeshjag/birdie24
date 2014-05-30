@@ -83,7 +83,7 @@ void game_state(enum GameState new_state) {
 		case GAME_STATE_LOBBY:
 			server_init();
 			if(network_init(PORT) < 0) {
-				printf("nooooes\n");
+				printf("Failed to bind to port\n");
 				new_state = GAME_STATE_MENU;
 				goto redo;
 			}
@@ -97,7 +97,7 @@ void game_state(enum GameState new_state) {
 			printf("connected.\n");
 			break;
 		case GAME_STATE_GAME:
-			d_sound_play(config.music_hillbilly, true, 127, 127, 0);
+			config.music_handle = d_sound_play(config.music_hillbilly, true, 127, 127, 0);
 			break;
 		default:
 			break;
@@ -105,7 +105,7 @@ void game_state(enum GameState new_state) {
 }
 
 int main(int argc, char **argv) {
-	d_init_custom("birdie24", 800, 600, false, "birdie24", NULL);
+	d_init_custom("bondeN^ wArs™", 800, 600, false, "birdie24", NULL);
 	init_res();
 	proto_init();
 	lobby_init();

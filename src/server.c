@@ -179,7 +179,6 @@ void server_loop() {
 		return;
 	switch (config.game_state) {
 		case GAME_STATE_GAME:
-			printf("%i\n", server_state.intro_time);
 			if(server_state.intro_time > SERVER_INTRO_LENGTH) {
 				server_state.pp.time_remain = timer_left - d_time_get();
 				server_state.pp.time_remain /= 1000;

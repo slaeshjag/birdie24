@@ -106,9 +106,11 @@ void *client_recv(void *arg) {
 				config.timer = packet_game->time_remain;
 				if(config.timer <= 0) {
 					if(config.points[0] > config.points[1])
-						sprintf(megabuf, "Player one wins!");
+						sprintf(megabuf, "Player %s wins!", config.player.player[0]);
+					else if(config.points[0] == config.points[1])
+						sprintf(megabuf, "The result was tied.");
 					else
-						sprintf(megabuf, "Player two wins!");
+						sprintf(megabuf, "Player %s wins!", config.player.player[1]);
 					
 					config.text_aux = megabuf;
 					

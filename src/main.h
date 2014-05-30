@@ -46,6 +46,8 @@ struct Config {
 	
 	int points[FARMER_COUNT];
 	int timer;
+	
+	int music_handle;
 } extern config;
 
 struct List {
