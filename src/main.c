@@ -29,6 +29,7 @@ struct Config config = {
 static void init_res() {
 	config.font_std = d_font_load("res/DejaVuSans.ttf", 24, 256, 256);
 	config.tileset = d_render_tilesheet_load("res/sprites.png", 16, 16, DARNIT_PFORMAT_RGBA8);
+	config.map = d_map_load("res/main.ldmz");
 	config.platform = d_platform_get();
 }
 

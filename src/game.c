@@ -56,6 +56,9 @@ void game_loop() {
 	}
 	
 	server_loop();
+	
+	d_tilemap_draw(config.map->layer[0].tilemap);
+	d_tilemap_draw(config.map->layer[1].tilemap);
 	for(i = 0; i < SHEEP_COUNT; i++) {
 		d_sprite_move(game.sheep.sprite[i], game.sheep.sheep[i].x, game.sheep.sheep[i].y);
 		d_sprite_draw(game.sheep.sprite[i]);

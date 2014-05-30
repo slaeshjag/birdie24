@@ -16,6 +16,8 @@ LDFLAGS		+=	-ldarnit -lpthread
 RM		=	rm -fR
 MKDIR		=	mkdir -p
 CP		=	cp
+MV		=	mv
+LDMZ	=	darnit-tmxconv
 
 ifneq ($(wildcard /etc/debian_version),) 
 	#Debian packaging

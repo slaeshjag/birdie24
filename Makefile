@@ -10,9 +10,13 @@ include config.mk
 all:
 	@echo " [INIT] bin/"
 	@$(MKDIR) bin/
+	@echo " [INIT] bin/res/"
 	@$(CP) -R res bin/
 	@echo " [ CD ] src/"
 	+@make -C src/
+	@echo " [ CD ] map/"
+	+@make -C map/
+	
 	
 	@echo "Build complete."
 	@echo 
@@ -27,6 +31,7 @@ clean:
 	+@$(RM) bin/
 	@echo " [ CD ] src/"
 	+@make -C src/ clean
+	+@$(RM) res/*.ldmz
 	@echo
 	@echo "Source tree cleaned."
 	@echo
