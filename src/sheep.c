@@ -93,9 +93,9 @@ int sheep_test_collide(int x, int y, int dx, int dy) {
 		MAP_COLL2(x, y, 15, 16);
 	}
 	
-	if (x + dx >= config.platform.screen_w)
+	if (x + dx >= config.platform.screen_w - 16)
 		return 1;
-	if (y + dy >= config.platform.screen_h)
+	if (y + dy >= config.platform.screen_h - 16)
 		return 1;
 	if (x + dx < 1)
 		return 1;
@@ -117,9 +117,9 @@ int sheep_collide(int sheep) {
 	MAP_COLL(0, 15);
 	MAP_COLL(15, 15);
 
-	if (server_state.sheep[sheep].x / 1000 >= config.platform.screen_w)
+	if (server_state.sheep[sheep].x / 1000 >= config.platform.screen_w - 16)
 		return 1;
-	if (server_state.sheep[sheep].y / 1000 >= config.platform.screen_h)
+	if (server_state.sheep[sheep].y / 1000 >= config.platform.screen_h - 16)
 		return 1;
 	if (server_state.sheep[sheep].x < 1000)
 		return 1;
@@ -252,5 +252,21 @@ void sheep_loop() {
 		server_state.pp.sheep[i].dir = 0;
 		server_state.pp.sheep[i].moving = 0;
 	}
+	return;
+}
+
+
+void sheep_panic(int x, int y) {
+	int c, i;
+	c =  d_bbox_test(bbox, x - SHEEP_PANIC_RADIUS / 2, y - SHEEP_PANIC_RADIUS / 2, SHEEP_PANIC_RADIUS, SHEEP_PANIC_RADIUS, server_state.sheep_collide, SHEEP_COUNT);
+
+	for (i = 0; i < c; i++) {
+		server_state.sheep[server_state.sheep_collide[i]].panic = 1;
+		if (!server_state.sheep[server_state.sheep_collide[i]].pg_x)
+			server_state.sheep[server_state.sheep_collide[i]].pg_x = rand() % SHEEP_PANIC_RANGE;
+		if (!server_state.sheep[server_state.sheep_collide[i]].pg_y)
+			server_state.sheep[server_state.sheep_collide[i]].pg_y = rand() % SHEEP_PANIC_RANGE;;
+	}
+
 	return;
 }

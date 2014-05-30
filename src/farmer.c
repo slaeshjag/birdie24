@@ -77,6 +77,8 @@ void farmer_move() {
 		farmer_move_loop(i);
 		server_state.pp.farmer[i].coord.x = server_state.plist[i].x / 1000;
 		server_state.pp.farmer[i].coord.y = server_state.plist[i].y / 1000;
+
+		sheep_panic(server_state.pp.farmer[i].coord.x / 1000 + 8, server_state.pp.farmer[i].coord.y / 1000 + 8);
 	}
 
 	return;
