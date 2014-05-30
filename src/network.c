@@ -12,15 +12,14 @@
 #include <winsock2.h>
 #include <windows.h>
 
-#define inet_ntop InetNtop
-#define inet_pton InetPton
-
 #else
 
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <arpa/inet.h>
+#include <netdb.h>
+#include <netinet/in.h>
 
 #define SOCKET int
 #define closesocket close
@@ -38,6 +37,8 @@ static int port;
 
 int network_init(int _port) {
 	int broadcast_enabled = 1;
+	struct hostent *broadcasthost;
+	
 	config.server.connected = false;
 	if(sock >= 0)
 		return 0;
@@ -66,7 +67,9 @@ int network_init(int _port) {
 	
 	broadcast.addr.sin_family = AF_INET;
 	broadcast.addr.sin_port = htons(port);
-	inet_pton(AF_INET, "255.255.255.255", &broadcast.addr.sin_addr);
+	broadcasthost = gethostbyname("255.255.255.255");
+	broadcast.addr.sin_addr = **((struct in_addr **) (broadcasthost->h_addr_list));
+	//inet_pton(AF_INET, "255.255.255.255", &broadcast.addr.sin_addr);
 	
 	return 0;
 }
@@ -95,10 +98,4 @@ unsigned long network_recv(void *buf, size_t bufsize) {
 	
 	recvfrom(sock, buf, bufsize, 0, (struct sockaddr *) &addr, &addrlen);
 	return addr.sin_addr.s_addr;	
-}
-
-void network_addr_to_string(unsigned long address, char *buf, size_t buflen) {
-	struct sockaddr_in addr;
-	addr.sin_addr.s_addr = address;
-	inet_ntop(AF_INET, &addr.sin_addr, buf, buflen);
 }

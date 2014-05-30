@@ -12,7 +12,7 @@ APPLICATIONSPATH=	/usr/share/applications
 DBGFLAGS	=	-O0 -g -D__DEBUG__
 #DBGFLAGS	=	-O3 -g
 CFLAGS		+=	-Wall $(INCS) $(DBGFLAGS)
-LDFLAGS		+=	-ldarnit -lpthread -lm
+LDFLAGS		+=	-ldarnit -lm
 RM		=	rm -fR
 MKDIR		=	mkdir -p
 CP		=	cp
@@ -39,6 +39,7 @@ ifeq ($(BUILDFOR), WIN32)
 	LDFLAGS	+=	-lws2_32
 	BIN	=	"$(TOPDIR)/bin/$(NAME).exe"
 else
+	LDFLAGS	+=	-lpthread
 ifeq ($(strip $(SBOX_UNAME_MACHINE)), arm)
 	#Maemo packaging
 	PACKAGE	:=	$(NAME)-$(VERSION)maemo.deb
