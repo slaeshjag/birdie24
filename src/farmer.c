@@ -71,6 +71,7 @@ void farmer_spawn() {
 	server_state.plist[0].dx = FARMER_INTRO_SPEED;
 	server_state.plist[0].dy = 0;
 	server_state.pp.farmer[0].coord.dir = 4;
+	d_bbox_add(bbox, 0, 0, 16, 16);
 	
 	if(FARMER_COUNT >= 2) {
 		server_state.plist[1].x = config.platform.screen_w * 1000 - 16000 ;
@@ -78,6 +79,7 @@ void farmer_spawn() {
 		server_state.plist[1].dx = -FARMER_INTRO_SPEED;
 		server_state.plist[1].dy = 0;
 		server_state.pp.farmer[1].coord.dir = 12;
+		d_bbox_add(bbox, 0, 0, 16, 16);
 	}
 	
 	if(FARMER_COUNT >= 3) {
@@ -86,6 +88,7 @@ void farmer_spawn() {
 		server_state.plist[2].dx = 0;
 		server_state.plist[2].dy = FARMER_INTRO_SPEED;
 		server_state.pp.farmer[2].coord.dir = 8;
+		d_bbox_add(bbox, 0, 0, 16, 16);
 	}
 	
 	if(FARMER_COUNT >= 4) {
@@ -94,6 +97,7 @@ void farmer_spawn() {
 		server_state.plist[3].dx = 0;
 		server_state.plist[3].dy = -FARMER_INTRO_SPEED;
 		server_state.pp.farmer[3].coord.dir = 0;
+		d_bbox_add(bbox, 0, 0, 16, 16);
 	}
 	
 	farmer_move();
@@ -132,7 +136,7 @@ void farmer_move_loop(int farmer) {
 			move = 1;
 				
 		}
-			
+		
 		if (ABS(server_state.plist[farmer].dy) >= 1000) {
 			if (!sheep_test_collide(server_state.plist[farmer].x / 1000, server_state.plist[farmer].y / 1000, 0, server_state.plist[farmer].dy < 0 ? -1 : 1, 0)) {
 				server_state.plist[farmer].y += (server_state.plist[farmer].dy < 0) ? -1000 : 1000;
@@ -140,7 +144,7 @@ void farmer_move_loop(int farmer) {
 			server_state.plist[farmer].dy += (server_state.plist[farmer].dy < 0) ? 1000 : -1000;
 			move = 1;
 		}
-			d_bbox_move(bbox, farmer, server_state.plist[farmer].x / 1000, server_state.plist[farmer].y / 1000);
+		d_bbox_move(bbox, farmer, server_state.plist[farmer].x / 1000, server_state.plist[farmer].y / 1000);
 	}
 
 	return;
@@ -150,8 +154,6 @@ void farmer_move_loop(int farmer) {
 void farmer_stab(int src) {
 	int target;
 	target = farmer_get_farmer_facing(src);
-	if (target >= 0)
-		fprintf(stderr, "found target %i\n", target);
 	if (target >= 0)
 		server_state.plist[target].stab_timeout = FARMER_STAB_TIME;
 
