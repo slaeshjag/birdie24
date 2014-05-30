@@ -3,8 +3,23 @@
 #include "sheep.h"
 #include "main.h"
 #include <limits.h>
+#include <darnit/darnit.h>
 
 #define	ABS(x)		((x) < 0 ? (x) : -(x))
+static DARNIT_BBOX *bbox;
+
+
+void sheep_prepare() {
+	bbox = d_bbox_new(SHEEP_COUNT);
+	d_bbox_set_indexkey(bbox);
+	return;
+}
+
+
+void sheep_init() {
+	d_bbox_clear(bbox);
+	return;
+}
 
 
 void sheep_spawn() {
@@ -35,7 +50,6 @@ void sheep_spawn() {
 	fprintf(stderr, "baaaaaaaaaaaaah!\n");
 	return;
 }
-		
 
 
 void sheep_loop() {
@@ -59,13 +73,14 @@ void sheep_loop() {
 				dx *= -1;
 			if (server_state.sheep[i].y - server_state.plist[j].y < 0)
 				dy *= -1;
-			dx *= 40;
-			dy *= 40;
+			dx *= 3;
+			dy *= 3;
 			f_dx += dx;
 			f_dy += dy;
 	
-			continue;
 			no_antigravity:
+			if (server_state.pp.leader_sheep[j] == i)
+				continue;
 			/* leader sheep anti-anti-gravity */
 			dx = ABS(server_state.sheep[i].x - server_state.sheep[server_state.pp.leader_sheep[j]].x);
 			dy = ABS(server_state.sheep[i].y - server_state.sheep[server_state.pp.leader_sheep[j]].y);
