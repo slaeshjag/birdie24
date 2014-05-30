@@ -150,6 +150,11 @@ void lobby_loop() {
 			lobby.selected_game++;
 	}
 	
+	if(keys.select) {
+		game_state(GAME_STATE_MENU);
+		return;
+	}
+	
 	if(keys.start) {
 		if(lobby.selected_game == 0) {
 			game_state(GAME_STATE_LOBBY_HOST);

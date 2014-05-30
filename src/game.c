@@ -32,7 +32,28 @@ void game_init() {
 void game_loop() {
 	static int tick = 0;
 	int i;
-	struct proto_control_packet packet;
+	struct proto_control_packet packet = {};
+	DARNIT_KEYS keys;
+	
+	keys = d_keys_get();
+	
+	if(keys.up) {
+		packet.up = 1;
+	} else if(keys.down) {
+		packet.down = 1;
+	}
+	
+	if(keys.left) {
+		packet.left = 1;
+	} else if(keys.right) {
+		packet.right = 1;
+	}
+	
+	if(keys.select) {
+		d_keys_set(keys);
+		game_state(GAME_STATE_MENU);
+		return;
+	}
 	
 	server_loop();
 	for(i = 0; i < SHEEP_COUNT; i++) {
