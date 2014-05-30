@@ -117,9 +117,11 @@ void lobby_playername_loop() {
 			break;
 		case 0:
 		case -2:
+			d_keys_set(d_keys_get());
 			game_state(GAME_STATE_MENU);
 			break;
 		default:
+			d_keys_set(d_keys_get());
 			game_state(GAME_STATE_LOBBY);
 			break;
 	}
