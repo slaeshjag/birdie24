@@ -10,6 +10,7 @@ struct sheep {
 
 };
 
+void sheep_spawn();
 void sheep_loop();
 
 #endif

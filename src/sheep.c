@@ -1,11 +1,37 @@
 #include "farmer.h"
+#include "server.h"
 #include "sheep.h"
-#include "limits.h"
+#include "main.h"
+#include <limits.h>
 
 struct sheep_gravity {
 	int			dx;
 	int			dy;
 };
+
+
+void sheep_spawn() {
+	int i, h;
+
+	fprintf(stderr, "Spawning a herd of sheep... ");
+
+	/* Räkna fåren! */
+	h = SHEEP_COUNT >> 1;
+	for (i = 0; i < h; i++) {
+		server_state.sheep[i].x = rand() % 200;
+		server_state.sheep[i].y = rand() % config.platform.screen_h - 16;
+	}
+
+	/* Side B */
+	for (; i < SHEEP_COUNT; i++) {
+		server_state.sheep[i].x = rand() % 200 - 200 + config.platform.screen_w;
+		server_state.sheep[i].y = rand() % config.platform.screen_h - 16;
+	}
+
+	fprintf(stderr, "done!\n");
+	return;
+}
+		
 
 
 void sheep_loop() {

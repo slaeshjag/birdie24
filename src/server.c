@@ -154,6 +154,8 @@ void server_start(const char *game_name) {
 	/* TODO: Make tihs configurable */
 	strcpy(server_state.map, "arne.ldmz");
 
+	sheep_spawn();
+
 	return;
 }
 
