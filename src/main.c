@@ -53,6 +53,7 @@ static void init_res() {
 
 	d_keymapping_set(keymap);
 	sheep_prepare();
+	farmer_prepare();
 
 }
 

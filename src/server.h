@@ -22,6 +22,8 @@ struct server_player_list_e {
 	int				dx;
 	int				dy;
 
+	int				stab_timeout;
+
 	/* Key status */
 	unsigned int			left;
 	unsigned int			right;

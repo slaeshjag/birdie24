@@ -35,6 +35,7 @@ struct proto_farmer {
 
 	unsigned int			action_yell	: 1;
 	unsigned int			action_stab	: 1;
+	unsigned int			action_stabbed	: 1;
 };
 
 struct proto_packet {

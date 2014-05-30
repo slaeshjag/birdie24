@@ -24,6 +24,7 @@ void sheep_spawn();
 void sheep_loop();
 int sheep_test_collide(int x, int y, int dx, int dy, int t);
 void sheep_panic(int x, int y);
+void sheep_counter();
 
 
 

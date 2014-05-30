@@ -11,9 +11,11 @@ static int conv_array[3][3] = {
 
 static DARNIT_BBOX *bbox;
 
+static int farmer_stunn_x_vel[8] = { 0, 1410, 2000, 1410, 0, -1410, -2000, -1410 };
+static int farmer_stunn_y_vel[8] = { 2000, 1410, 0, -1410, -2000, -1410, 0, 1410 };
 void farmer_prepare() {
 	bbox = d_bbox_new(FARMER_COUNT);
-	d_bbox_set_keyindex(bbox);
+	d_bbox_set_indexkey(bbox);
 }
 
 
@@ -36,54 +38,46 @@ void farmer_spawn() {
 
 int farmer_get_farmer_facing(int farmer) {
 	int x, y, i;
+	unsigned int p;
 	x = y = 0;
 	switch (server_state.pp.farmer[farmer].coord.dir >> 1) {
 		case 0:
-			x = server_state.pp.farmer[farmer].coord.x + 16;
-			y = server_state.pp.farmer[farmer].coord.y;
+			x = server_state.pp.farmer[farmer].coord.x;
+			y = server_state.pp.farmer[farmer].coord.y + 16;
 			break;
 		case 1:
 			x = server_state.pp.farmer[farmer].coord.x + 16;
 			y = server_state.pp.farmer[farmer].coord.y + 16;
 			break;
 		case 2:
-			x = server_state.pp.farmer[farmer].coord.x;
-			y = server_state.pp.farmer[farmer].coord.y + 16;
+			x = server_state.pp.farmer[farmer].coord.x + 16;
+			y = server_state.pp.farmer[farmer].coord.y;
 			break;
 		case 3:
-			x = server_state.pp.farmer[farmer].coord.x - 16;
-			y = server_state.pp.farmer[farmer].coord.y + 16;
+			x = server_state.pp.farmer[farmer].coord.x + 16;
+			y = server_state.pp.farmer[farmer].coord.y - 16;
 			break;
 		case 4:
-			x = server_state.pp.farmer[farmer].coord.x - 16;
-			y = server_state.pp.farmer[farmer].coord.y;
+			x = server_state.pp.farmer[farmer].coord.x;
+			y = server_state.pp.farmer[farmer].coord.y - 16;
 			break;
 		case 5:
 			x = server_state.pp.farmer[farmer].coord.x - 16;
 			y = server_state.pp.farmer[farmer].coord.y - 16;
 			break;
 		case 6:
-			x = server_state.pp.farmer[farmer].coord.x;
-			y = server_state.pp.farmer[farmer].coord.y - 16;
+			x = server_state.pp.farmer[farmer].coord.x - 16;
+			y = server_state.pp.farmer[farmer].coord.y;
 			break;
 		case 7:
-			x = server_state.pp.farmer[farmer].coord.x + 16;
-			y = server_state.pp.farmer[farmer].coord.y - 16;
+			x = server_state.pp.farmer[farmer].coord.x - 16;
+			y = server_state.pp.farmer[farmer].coord.y + 16;
 			break;		
 	}
-	fprintf(stderr, "We're %i\n", farmer);
-
-	for (i = 0; i < FARMER_COUNT; i++) {
-		if (server_state.pp.farmer[i].coord.x + 16 <= x)
-			continue;
-		if (server_state.pp.farmer[i].coord.x >= x + 16)
-			continue;
-		if (server_state.pp.farmer[i].coord.y + 16 <= y)
-			continue;
-		if (server_state.pp.farmer[i].coord.y >= y + 16)
-			continue;
-		return i;
-	}
+	
+	i = d_bbox_test(bbox, x, y, 16, 16, &p, 1);
+	if (i)
+		return p;
 
 	return -1;
 }
@@ -109,7 +103,7 @@ void farmer_move_loop(int farmer) {
 			server_state.plist[farmer].dy += (server_state.plist[farmer].dy < 0) ? 1000 : -1000;
 			move = 1;
 		}
-			d_bbox_move(bbox, i, server_state.plist[i].x / 1000, server_state.plist[i].y / 1000);
+			d_bbox_move(bbox, farmer, server_state.plist[farmer].x / 1000, server_state.plist[farmer].y / 1000);
 	}
 
 	return;
@@ -119,8 +113,9 @@ void farmer_move_loop(int farmer) {
 void farmer_stab(int src) {
 	int target;
 	target = farmer_get_farmer_facing(src);
+	if (target > 0)
+		server_state.plist[target].stab_timeout = FARMER_STAB_TIME;
 
-	fprintf(stderr, "Found %i\n", target);
 	return;
 }
 	
@@ -129,6 +124,13 @@ void farmer_move() {
 	int i, nx, ny, xd, yd, angle;
 
 	for (i = 0; i < FARMER_COUNT; i++) {
+		if (server_state.plist[i].stab_timeout) {
+			server_state.plist[i].dx = farmer_stunn_x_vel[server_state.pp.farmer[i].coord.dir] - (FARMER_STAB_TIME - server_state.plist[i].stab_timeout) * 10;
+			server_state.plist[i].dy = farmer_stunn_y_vel[server_state.pp.farmer[i].coord.dir] - (FARMER_STAB_TIME - server_state.plist[i].stab_timeout) * 10;
+			server_state.plist[i].stab_timeout--;
+			goto update;
+		}
+			
 		xd = -1 * server_state.plist[i].left + server_state.plist[i].right;
 		yd = -1 * server_state.plist[i].up + server_state.plist[i].down;
 
@@ -145,8 +147,10 @@ void farmer_move() {
 
 		server_state.pp.farmer[i].coord.moving = (xd || yd);
 
+		update:
 		/* TODO: Check collision */
 
+		server_state.pp.farmer[i].action_stabbed = (server_state.plist[i].stab_timeout > 0);
 		server_state.plist[i].dx += nx;
 		server_state.plist[i].dy += ny;
 		farmer_move_loop(i);

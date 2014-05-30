@@ -5,6 +5,7 @@
 
 #define	FARMER_COUNT		2
 #define	FARMER_SPEED		120
+#define	FARMER_STAB_TIME	30
 
 struct Farmer {
 	int			x;
@@ -17,5 +18,6 @@ struct Farmer {
 
 void farmer_spawn();
 void farmer_move();
+void farmer_prepare();
 
 #endif

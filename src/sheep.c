@@ -37,30 +37,23 @@ void sheep_init() {
 
 
 void sheep_spawn() {
-	int i, h;
+	int i, h, c;
 
 	sheep_init();
 	fprintf(stderr, "Spawning a herd of sheep... ");
 
-	/* Räkna fåren! */
-	h = SHEEP_COUNT >> 1;
-	for (i = 0; i < h; i++) {
-		server_state.sheep[i].x = rand() % 200;
-		server_state.sheep[i].y = rand() % config.platform.screen_h - 16;
-		server_state.sheep[i].x *= 1000;
-		server_state.sheep[i].y *= 1000;
+	c = 0;
+	for (i = 19; c < SHEEP_COUNT; i++) {
+		for (h = 19; h < 34 && c < SHEEP_COUNT; h++) {
+			if (config.map->layer[1].tilemap->data[i * config.map->layer[1].tilemap->w + h])
+				continue;
+			server_state.sheep[c].x = h * 16 * 1000;
+			server_state.sheep[c].y = i * 16 * 1000;
+			d_bbox_add(bbox, server_state.sheep[i].x / 1000, server_state.sheep[i].y / 1000, 16, 16);
+			c++;
+		}
 	}
-
-	/* Side B */
-	for (; i < SHEEP_COUNT; i++) {
-		server_state.sheep[i].x = rand() % 200 - 200 + config.platform.screen_w;
-		server_state.sheep[i].y = rand() % config.platform.screen_h - 16;
-		server_state.sheep[i].x *= 1000;
-		server_state.sheep[i].y *= 1000;
-	}
-
-	for (i = 0; i < SHEEP_COUNT; i++)
-		d_bbox_add(bbox, server_state.sheep[i].x / 1000, server_state.sheep[i].y / 1000, 16, 16);
+		
 
 	for (i = 0; i < FARMER_COUNT; i++)
 		server_state.pp.leader_sheep[i] = SHEEP_COUNT / FARMER_COUNT * i;
@@ -104,31 +97,6 @@ int sheep_test_collide(int x, int y, int dx, int dy, int t) {
 	return 0;
 }
 
-int sheep_collide(int sheep) {
-	int c;
-	int tx, ty;
-	c =  d_bbox_test(bbox, server_state.sheep[sheep].x / 1000, server_state.sheep[sheep].y / 1000, 16, 16, server_state.sheep_collide, SHEEP_COUNT);
-	if (c > 1) {
-		return 1;
-	}
-
-	MAP_COLL(0, 0);
-	MAP_COLL(15, 0);
-	MAP_COLL(0, 15);
-	MAP_COLL(15, 15);
-
-	if (server_state.sheep[sheep].x / 1000 >= config.platform.screen_w - 16)
-		return 1;
-	if (server_state.sheep[sheep].y / 1000 >= config.platform.screen_h - 16)
-		return 1;
-	if (server_state.sheep[sheep].x < 1000)
-		return 1;
-	if (server_state.sheep[sheep].y < 1000)
-		return 1;
-	return 0;
-}
-
-
 void sheep_move() {
 	int i;
 	int move = 1;
@@ -160,10 +128,8 @@ void sheep_move() {
 
 
 void sheep_loop() {
-	int i, j, dx, dy, f_dx, f_dy, m_dx, m_dy, d;
+	int i, j, dx, dy, f_dx, f_dy, m_dx, m_dy, d, deg;
 	float x, y;
-
-	fprintf(stderr, "sheep loop\n");
 
 	/* Counting sheep... Zzz... */
 	for (i = 0; i < SHEEP_COUNT; i++) {
@@ -213,7 +179,6 @@ void sheep_loop() {
 		if (server_state.sheep[i].panic) {
 			f_dx = server_state.sheep[i].pg_x;
 			f_dy = server_state.sheep[i].pg_y;
-			fprintf(stderr, "%i %i\n", f_dx, f_dy);
 			server_state.sheep[i].panic = 0;
 		} else {
 			server_state.sheep[i].pg_x = 0;
@@ -231,12 +196,15 @@ void sheep_loop() {
 			x = m_dx;
 			y = m_dy;
 			d = atan(y/x) * 1800. / M_PI;
+			if (x > 0 && d < 0)
+				d += 3600;
 			if (x < 0)
 				d += 1800;
+			deg = d;
 			d += 112;
 			d /= 225;
-			if (d == 16)
-				d = 0;
+			d %= 16;
+			//fprintf(stderr, "%i = dir %i\n", deg, d);
 		}
 		server_state.pp.sheep[i].dir = d;
 
@@ -250,7 +218,6 @@ void sheep_loop() {
 	for (i = 0; i < SHEEP_COUNT; i++) {
 		server_state.pp.sheep[i].x = server_state.sheep[i].x / 1000;
 		server_state.pp.sheep[i].y = server_state.sheep[i].y / 1000;
-		server_state.pp.sheep[i].dir = 0;
 		server_state.pp.sheep[i].moving = 0;
 	}
 	return;
@@ -261,17 +228,21 @@ void sheep_panic(int x, int y) {
 	int c, i;
 	c =  d_bbox_test(bbox, x - SHEEP_PANIC_RADIUS / 2, y - SHEEP_PANIC_RADIUS / 2, SHEEP_PANIC_RADIUS, SHEEP_PANIC_RADIUS, server_state.sheep_collide, SHEEP_COUNT);
 
-	fprintf(stderr, "Causung panic\n");
-
 	for (i = 0; i < c; i++) {
 		server_state.sheep[server_state.sheep_collide[i]].panic = 1;
-		if (!server_state.sheep[server_state.sheep_collide[i]].pg_x) {
-			fprintf(stderr, "Setting new value\n");
+		if (!server_state.sheep[server_state.sheep_collide[i]].pg_x)
 			server_state.sheep[server_state.sheep_collide[i]].pg_x = rand() % SHEEP_PANIC_RANGE * ((rand() & 1) ? -1 : 1) + 2000 * ((rand() & 1) ? -1 : 1);
-		}
 		if (!server_state.sheep[server_state.sheep_collide[i]].pg_y)
 			server_state.sheep[server_state.sheep_collide[i]].pg_y = rand() % SHEEP_PANIC_RANGE * ((rand() & 1) ? -1 : 1) + 2000 * ((rand() & 1) ? -1 : 1);
 	}
+
+	return;
+}
+
+
+void sheep_counter() {
+	server_state.pp.sheep_points[0] = d_bbox_test(bbox, 0*16, 16*16, 7*16, 7*16, server_state.sheep_collide, SHEEP_COUNT);
+	server_state.pp.sheep_points[1] = d_bbox_test(bbox, 43*16, 16*16, 7*16, 7*16, server_state.sheep_collide, SHEEP_COUNT);
 
 	return;
 }
