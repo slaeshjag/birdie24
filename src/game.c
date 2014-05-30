@@ -134,7 +134,7 @@ void game_loop() {
 	d_text_surface_draw(game.text);
 	tick++;
 	tick %= 3;
-	if(d_sound_playback_status(config.music_handle) == 0) {
+	if(d_sound_playback_status(config.music_handle) < 0) {
 		config.music_handle = d_sound_play(config.music_hillbilly, true, 127, 127, 0);
 	}
 }
