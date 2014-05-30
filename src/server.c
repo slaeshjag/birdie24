@@ -162,6 +162,7 @@ void server_start(const char *game_name) {
 	/* TODO: Make tihs configurable */
 	strcpy(server_state.map, "arne.ldmz");
 
+	server_state.pp.time_remain = 90;
 	sheep_spawn();
 	farmer_spawn();
 
