@@ -41,6 +41,9 @@ struct Config {
 		char name[PROTO_GAME_NAME_MAX];
 		bool connected;
 	} server;
+	
+	int points[FARMER_COUNT];
+	int timer;
 } extern config;
 
 struct List {

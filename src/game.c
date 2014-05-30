@@ -45,13 +45,18 @@ void game_init() {
 		d_sprite_frame_entry_set(game.farmer.sprite_yell[i], 0, 1, 18, 100);
 		d_sprite_activate(game.farmer.sprite_yell[i], 0);
 		d_sprite_animate_start(game.farmer.sprite_yell[i]);
+		
+		
 	}
+	
+	game.text = d_text_surface_new(config.font_std, 256, config.platform.screen_w, 16, config.platform.screen_h - 32);
 }
 
 void game_loop() {
 	static int tick = 0;
 	int i;
 	struct proto_control_packet packet = {};
+	char tmp[64];
 	DARNIT_KEYS keys;
 	
 	keys = d_keys_get();
@@ -90,7 +95,12 @@ void game_loop() {
 		d_sprite_draw(game.sheep.sprite[i]);
 	}
 	
+	d_text_surface_reset(game.text);
+	sprintf(tmp, "Timer: %i", config.timer);
+	d_text_surface_string_append(game.text, tmp);
 	for(i = 0; i < FARMER_COUNT; i++) {
+		sprintf(tmp, "    Scrore player %i: %i", i + 1, config.points[i]);
+		d_text_surface_string_append(game.text, tmp);
 		d_sprite_move(game.farmer.sprite[i], game.farmer.farmer[i].x, game.farmer.farmer[i].y);
 		d_sprite_rotate(game.farmer.sprite[i], game.farmer.farmer[i].angle);
 		
