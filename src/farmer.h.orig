@@ -4,9 +4,13 @@
 #include <stdbool.h>
 
 #define	FARMER_COUNT		2
+<<<<<<< HEAD
 #define	FARMER_SPEED		120
 #define	FARMER_STAB_TIME	30
+=======
+#define	FARMER_SPEED		240
 #define	FARMER_INTRO_SPEED		3000
+>>>>>>> 53b605d3c25303a42269f215e2b96bbb1af76d60
 
 struct Farmer {
 	int			x;
@@ -19,7 +23,10 @@ struct Farmer {
 
 void farmer_spawn();
 void farmer_move();
+<<<<<<< HEAD
 void farmer_prepare();
+=======
 void farmer_intro();
+>>>>>>> 53b605d3c25303a42269f215e2b96bbb1af76d60
 
 #endif

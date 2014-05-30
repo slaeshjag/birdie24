@@ -20,6 +20,17 @@ void farmer_prepare() {
 
 
 void farmer_spawn() {
+<<<<<<< HEAD
+	int i;
+
+	d_bbox_clear(bbox);
+
+	for (i = 0; i < FARMER_COUNT; i++) {
+		server_state.plist[i].x = config.platform.screen_w / 2 * 1000;
+		server_state.plist[i].y = config.platform.screen_h / FARMER_COUNT * i * 1000 + 1000;
+		server_state.plist[i].dx = server_state.plist[i].dy = 0;
+		d_bbox_add(bbox, server_state.plist[i].x / 1000, server_state.plist[i].y / 1000, 16, 16);
+=======
 	server_state.plist[0].x = 0;
 	server_state.plist[0].y = config.platform.screen_h / 2 * 1000 + 4000;
 	server_state.plist[0].dx = FARMER_INTRO_SPEED;
@@ -32,6 +43,7 @@ void farmer_spawn() {
 		server_state.plist[1].dx = -FARMER_INTRO_SPEED;
 		server_state.plist[1].dy = 0;
 		server_state.pp.farmer[1].coord.dir = 12;
+>>>>>>> 53b605d3c25303a42269f215e2b96bbb1af76d60
 	}
 	
 	if(FARMER_COUNT >= 3) {
@@ -74,6 +86,53 @@ void farmer_intro_set_speed() {
 	}
 }
 
+int farmer_get_farmer_facing(int farmer) {
+	int x, y, i;
+	unsigned int p;
+	x = y = 0;
+	switch (server_state.pp.farmer[farmer].coord.dir >> 1) {
+		case 0:
+			x = server_state.pp.farmer[farmer].coord.x;
+			y = server_state.pp.farmer[farmer].coord.y + 16;
+			break;
+		case 1:
+			x = server_state.pp.farmer[farmer].coord.x + 16;
+			y = server_state.pp.farmer[farmer].coord.y + 16;
+			break;
+		case 2:
+			x = server_state.pp.farmer[farmer].coord.x + 16;
+			y = server_state.pp.farmer[farmer].coord.y;
+			break;
+		case 3:
+			x = server_state.pp.farmer[farmer].coord.x + 16;
+			y = server_state.pp.farmer[farmer].coord.y - 16;
+			break;
+		case 4:
+			x = server_state.pp.farmer[farmer].coord.x;
+			y = server_state.pp.farmer[farmer].coord.y - 16;
+			break;
+		case 5:
+			x = server_state.pp.farmer[farmer].coord.x - 16;
+			y = server_state.pp.farmer[farmer].coord.y - 16;
+			break;
+		case 6:
+			x = server_state.pp.farmer[farmer].coord.x - 16;
+			y = server_state.pp.farmer[farmer].coord.y;
+			break;
+		case 7:
+			x = server_state.pp.farmer[farmer].coord.x - 16;
+			y = server_state.pp.farmer[farmer].coord.y + 16;
+			break;		
+	}
+	
+	i = d_bbox_test(bbox, x, y, 16, 16, &p, 1);
+	if (i)
+		return p;
+
+	return -1;
+}
+
+
 void farmer_move_loop(int farmer) {
 	int move = 1;
 
@@ -113,7 +172,7 @@ void farmer_stab(int src) {
 
 void farmer_move() {
 	int i, nx, ny, xd, yd, angle;
-
+	
 	for (i = 0; i < FARMER_COUNT; i++) {
 		if (server_state.plist[i].stab_timeout) {
 			server_state.plist[i].dx = farmer_stunn_x_vel[server_state.pp.farmer[i].coord.dir] - (FARMER_STAB_TIME - server_state.plist[i].stab_timeout) * 10;

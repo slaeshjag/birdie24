@@ -45,6 +45,7 @@ static void init_res() {
 	config.font_std = d_font_load("res/DejaVuSans.ttf", 24, 256, 256);
 	config.font_big = d_font_load("res/DejaVuSans.ttf", 64, 256, 256);
 	config.tileset = d_render_tilesheet_load("res/tiles.png", 16, 16, DARNIT_PFORMAT_RGBA8);
+	config.tractor = d_render_tilesheet_load("res/tractor.png", 64, 64, DARNIT_PFORMAT_RGBA8);
 	config.menu_background = d_render_tilesheet_load("res/menu.png", 800, 600, DARNIT_PFORMAT_RGBA8);
 	config.spriteset = d_render_tilesheet_load("res/sprites.png", 16, 16, DARNIT_PFORMAT_RGBA8);
 	config.map = d_map_load("res/main.ldmz");

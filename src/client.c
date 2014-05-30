@@ -99,8 +99,9 @@ void *client_recv(void *arg) {
 					game.farmer.farmer[i].angle = ((packet_game->farmer[i].coord.dir)*225) - 900;
 					game.farmer.farmer[i].yell = packet_game->farmer[i].action_yell;
 					game.farmer.farmer[i].stab = packet_game->farmer[i].action_stab;
+					config.points[i] = packet_game->sheep_points[i];
 				}
-				
+				config.timer = packet_game->time_remain;
 				break;
 			default:
 				server_handle_packet(&packet, addr);

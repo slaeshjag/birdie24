@@ -57,7 +57,9 @@ void sheep_spawn() {
 
 	for (i = 0; i < FARMER_COUNT; i++)
 		server_state.pp.leader_sheep[i] = SHEEP_COUNT / FARMER_COUNT * i;
-
+	
+	sheep_loop();
+	
 	fprintf(stderr, "baaaaaaaaaaaaah!\n");
 	return;
 }

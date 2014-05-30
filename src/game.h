@@ -14,6 +14,8 @@ struct Game {
 		DARNIT_SPRITE *sprite_pitchfork[FARMER_COUNT];
 		DARNIT_SPRITE *sprite_yell[FARMER_COUNT];
 	} farmer;
+	
+	DARNIT_TEXT_SURFACE *text;
 } extern game;
 
 void game_init();

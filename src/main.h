@@ -25,6 +25,7 @@ struct Config {
 	DARNIT_TILESHEET *tileset;
 	DARNIT_TILESHEET *spriteset;
 	DARNIT_TILESHEET *menu_background;
+	DARNIT_TILESHEET *tractor;
 	DARNIT_SOUND *music_hillbilly;
 	DARNIT_MAP *map;
 	
@@ -40,6 +41,9 @@ struct Config {
 		char name[PROTO_GAME_NAME_MAX];
 		bool connected;
 	} server;
+	
+	int points[FARMER_COUNT];
+	int timer;
 } extern config;
 
 struct List {

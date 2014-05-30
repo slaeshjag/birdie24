@@ -4,6 +4,7 @@
 #define	SERVER_PORT			34543
 #define	SERVER_FARMER_SLEEPING		500
 
+#define SERVER_INTRO_LENGTH 230
 
 #include "farmer.h"
 #include "proto.h"
@@ -34,6 +35,7 @@ struct server_player_list_e {
 
 struct server_player_state {
 	int				enabled;
+	int 				intro_time;
 	struct server_player_list_e	plist[FARMER_COUNT];
 	struct Sheep			sheep[SHEEP_COUNT];
 	struct proto_packet		pp;
