@@ -23,14 +23,33 @@ static void (*state_loop[GAME_STATES])() = {
 };
 
 struct Config config = {
-	.game_state = GAME_STATE_LOBBY_PLAYERNAME,
+	.game_state = GAME_STATE_MENU,
 };
 
 static void init_res() {
+	DARNIT_INPUT_MAP keymap = {
+		.up = TPW_KEY_UP,
+		.down = TPW_KEY_DOWN,
+		.left = TPW_KEY_LEFT,
+		.right = TPW_KEY_RIGHT,
+		.x = TPW_KEY_SPACE,
+		.y = TPW_KEY_LCTRL,
+		.a = TPW_KEY_z,
+		.b = TPW_KEY_x,
+		.start = TPW_KEY_RETURN,
+		.select = TPW_KEY_ESCAPE,
+		.l = TPW_KEY_q,
+		.r = TPW_KEY_w,
+	};
+	
 	config.font_std = d_font_load("res/DejaVuSans.ttf", 24, 256, 256);
-	config.tileset = d_render_tilesheet_load("res/sprites.png", 16, 16, DARNIT_PFORMAT_RGBA8);
+	config.font_big = d_font_load("res/DejaVuSans.ttf", 64, 256, 256);
+	config.tileset = d_render_tilesheet_load("res/tiles.png", 16, 16, DARNIT_PFORMAT_RGBA8);
+	config.spriteset = d_render_tilesheet_load("res/sprites.png", 16, 16, DARNIT_PFORMAT_RGBA8);
 	config.map = d_map_load("res/main.ldmz");
 	config.platform = d_platform_get();
+
+	d_keymapping_set(keymap);
 	sheep_prepare();
 
 }
@@ -77,6 +96,7 @@ int main(int argc, char **argv) {
 	proto_init();
 	lobby_init();
 	game_init();
+	menu_init();
 	
 	for(;;) {
 		d_render_begin();

@@ -69,6 +69,9 @@ void *client_recv(void *arg) {
 				
 				break;
 			case PROTO_TYPE_GAMESTATE:
+				if(config.game_state == GAME_STATE_LOBBY_JOIN) {
+					game_state(GAME_STATE_GAME);
+				}
 				packet_game = (void *) &packet;
 				for(i = 0; i < SHEEP_COUNT; i++) {
 					game.sheep.sheep[i].x = packet_game->sheep[i].x;
@@ -78,6 +81,10 @@ void *client_recv(void *arg) {
 				for(i = 0; i < FARMER_COUNT; i++) {
 					game.farmer.farmer[i].x = packet_game->farmer[i].coord.x;
 					game.farmer.farmer[i].y = packet_game->farmer[i].coord.y;
+					game.farmer.farmer[i].move = packet_game->farmer[i].coord.moving;
+					game.farmer.farmer[i].angle = ((packet_game->farmer[i].coord.dir)*225) - 900;
+					game.farmer.farmer[i].yell = packet_game->farmer[i].action_yell;
+					game.farmer.farmer[i].stab = packet_game->farmer[i].action_stab;
 				}
 				
 				break;
@@ -93,6 +100,7 @@ void client_init() {
 	int i;
 	pthread_cancel(client_recv_thread);
 	/*Freeing memory is for pussies*/
+	lobby_client.client = NULL;
 	add_lobby_game("[Host server]", 0);
 	lobby_client.clients = 0;
 

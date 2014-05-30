@@ -15,16 +15,23 @@ void game_init() {
 	int i;
 	
 	for(i = 0; i < SHEEP_COUNT; i++) {
-		game.sheep.sprite[i] = d_sprite_new(config.tileset);
-		d_sprite_frame_entry_set(game.sheep.sprite[i], 0, 0, 6, 200);
+		game.sheep.sprite[i] = d_sprite_new(config.spriteset);
+		d_sprite_frame_entry_set(game.sheep.sprite[i], 0, 0, 16, 200);
 		d_sprite_activate(game.sheep.sprite[i], 0);
 		d_sprite_move(game.sheep.sprite[i], 32, 32);
 	}
 	
 	for(i = 0; i < FARMER_COUNT; i++) {
-		game.farmer.sprite[i] = d_sprite_new(config.tileset);
-		d_sprite_frame_entry_set(game.farmer.sprite[i], 0, 0, 0, 200);
+		game.farmer.sprite[i] = d_sprite_new(config.spriteset);
+		d_sprite_frame_entry_set(game.farmer.sprite[i], 0, 0, 4*i + 0, 200);
+		
+		d_sprite_frame_entry_set(game.farmer.sprite[i], 1, 0, 4*i + 1, 200);
+		d_sprite_frame_entry_set(game.farmer.sprite[i], 1, 1, 4*i + 2, 200);
+		
+		d_sprite_frame_entry_set(game.farmer.sprite[i], 2, 0, 4*i + 0, 200);
+		d_sprite_frame_entry_set(game.farmer.sprite[i], 2, 1, 4*i + 3, 200);
 		d_sprite_activate(game.farmer.sprite[i], 0);
+		
 		d_sprite_move(game.farmer.sprite[i], 32, 32);
 	}
 }
@@ -49,6 +56,10 @@ void game_loop() {
 		packet.right = 1;
 	}
 	
+	if(keys.x) {
+		packet.stab = 1;
+	}
+	
 	if(keys.select) {
 		d_keys_set(keys);
 		game_state(GAME_STATE_MENU);
@@ -66,6 +77,18 @@ void game_loop() {
 	
 	for(i = 0; i < FARMER_COUNT; i++) {
 		d_sprite_move(game.farmer.sprite[i], game.farmer.farmer[i].x, game.farmer.farmer[i].y);
+		d_sprite_rotate(game.farmer.sprite[i], game.farmer.farmer[i].angle);
+		if(game.farmer.farmer[i].stab) {
+			d_sprite_direction_set(game.farmer.sprite[i], 2);
+			d_sprite_animate_start(game.farmer.sprite[i]);
+		} else if(game.farmer.farmer[i].move) {
+			d_sprite_direction_set(game.farmer.sprite[i], 1);
+			d_sprite_animate_start(game.farmer.sprite[i]);
+		} else {
+			d_sprite_frame_set(game.farmer.sprite[i], 0);
+			d_sprite_direction_set(game.farmer.sprite[i], 0);
+			d_sprite_animate_stop(game.farmer.sprite[i]);
+		}
 		d_sprite_draw(game.farmer.sprite[i]);
 	}
 	
