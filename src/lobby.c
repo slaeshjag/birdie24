@@ -62,7 +62,10 @@ static void update_lists(struct List *player, struct List *game) {
 			d_text_surface_color_next(lobby.list_games, 255, 255, 255);
 		}
 		d_text_surface_string_append(lobby.list_games, ((struct LobbyHost *) (game->value))->name);
-		d_text_surface_string_append(lobby.list_games, "'s game\n");
+		if(i == 0)
+			d_text_surface_string_append(lobby.list_games, "\n");
+		else
+			d_text_surface_string_append(lobby.list_games, "'s game\n");
 	}
 }
 
