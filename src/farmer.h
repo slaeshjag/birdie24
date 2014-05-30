@@ -5,7 +5,7 @@
 
 #define	FARMER_COUNT		2
 #define	FARMER_SPEED		120
-#define	FARMER_STAB_TIME	45
+#define	FARMER_STAB_TIME	75
 #define	FARMER_INTRO_SPEED		3000
 
 struct Farmer {
