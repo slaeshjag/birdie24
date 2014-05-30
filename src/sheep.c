@@ -59,8 +59,8 @@ void sheep_loop() {
 				dx *= -1;
 			if (server_state.sheep[i].y - server_state.plist[j].y < 0)
 				dy *= -1;
-			dx *= 10;
-			dy *= 10;
+			dx *= 40;
+			dy *= 40;
 			f_dx += dx;
 			f_dy += dy;
 	
