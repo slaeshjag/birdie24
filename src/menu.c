@@ -19,11 +19,14 @@ void menu_init() {
 	menu.text_subtitle = d_text_surface_new(config.font_std, 32, config.platform.screen_w, config.platform.screen_w/2 - 110, 128);
 	d_text_surface_string_append(menu.text_subtitle, "~Press enter~");
 	menu.text_help = d_text_surface_new(config.font_std, 128, config.platform.screen_w, 16, config.platform.screen_h - 32);
-	d_text_surface_string_append(menu.text_help, "Arrows: move, Ctrl: shout curses, Space: use pitchfork");
+	
 }
 
 void menu_loop() {
 	DARNIT_KEYS keys;
+	
+	d_text_surface_reset(menu.text_help);
+	d_text_surface_string_append(menu.text_help, config.text_aux);
 	
 	d_render_tile_blit(config.menu_background, 0, 0, 0);
 	d_text_surface_draw(menu.text_title);

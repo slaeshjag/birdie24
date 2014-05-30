@@ -24,6 +24,7 @@ static void (*state_loop[GAME_STATES])() = {
 
 struct Config config = {
 	.game_state = GAME_STATE_MENU,
+	.text_aux = "Arrows: move, Ctrl: shout curses, Space: use pitchfork"
 };
 
 static void init_res() {

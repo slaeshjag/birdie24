@@ -27,6 +27,8 @@
 
 pthread_t client_recv_thread;
 
+char megabuf[512];
+
 static void add_lobby_game(char *name, unsigned long addr) {
 	struct List **list;
 	for(list = &lobby_client.client; *list; list = &((*list)->next)) {
@@ -102,6 +104,16 @@ void *client_recv(void *arg) {
 					config.points[i] = packet_game->sheep_points[i];
 				}
 				config.timer = packet_game->time_remain;
+				if(config.timer <= 0) {
+					if(config.points[0] > config.points[1])
+						sprintf(megabuf, "Player one wins!");
+					else
+						sprintf(megabuf, "Player two wins!");
+					
+					config.text_aux = megabuf;
+					
+					game_state(GAME_STATE_MENU);
+				}
 				break;
 			default:
 				server_handle_packet(&packet, addr);

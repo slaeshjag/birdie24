@@ -29,6 +29,8 @@ struct Config {
 	DARNIT_SOUND *music_hillbilly;
 	DARNIT_MAP *map;
 	
+	char *text_aux;
+	
 	char player_name[PROTO_PLAYER_NAME];
 	
 	struct {
