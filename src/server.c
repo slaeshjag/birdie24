@@ -4,6 +4,8 @@
 #include "main.h"
 #include <string.h>
 
+int timer_left;
+
 
 void server_init() {
 	memset(&server_state, 0, sizeof(server_state));
@@ -178,9 +180,13 @@ void server_loop() {
 		case GAME_STATE_GAME:
 			printf("%i\n", server_state.intro_time);
 			if(server_state.intro_time > SERVER_INTRO_LENGTH) {
+				server_state.pp.time_remain = timer_left - d_time_get();
+				server_state.pp.time_remain /= 1000;
 				farmer_move();
 				sheep_loop();
 			} else {
+
+				timer_left = d_time_get() + 1000*90;
 				if(server_state.intro_time < 2)
 					sheep_loop();
 				farmer_intro();

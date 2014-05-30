@@ -19,6 +19,53 @@ void farmer_prepare() {
 }
 
 
+int farmer_get_farmer_facing(int farmer) {
+	int x, y, i;
+		unsigned int p;
+			x = y = 0;
+				switch (server_state.pp.farmer[farmer].coord.dir >> 1) {
+						case 0:
+									x = server_state.pp.farmer[farmer].coord.x;
+												y = server_state.pp.farmer[farmer].coord.y + 16;
+															break;
+																	case 1:
+																				x = server_state.pp.farmer[farmer].coord.x + 16;
+																							y = server_state.pp.farmer[farmer].coord.y + 16;
+																										break;
+																												case 2:
+																															x = server_state.pp.farmer[farmer].coord.x + 16;
+																																		y = server_state.pp.farmer[farmer].coord.y;
+																																					break;
+																																							case 3:
+																																										x = server_state.pp.farmer[farmer].coord.x + 16;
+																																													y = server_state.pp.farmer[farmer].coord.y - 16;
+																																																break;
+																																																		case 4:
+																																																					x = server_state.pp.farmer[farmer].coord.x;
+																																																								y = server_state.pp.farmer[farmer].coord.y - 16;
+																																																											break;
+																																																													case 5:
+																																																																x = server_state.pp.farmer[farmer].coord.x - 16;
+																																																																			y = server_state.pp.farmer[farmer].coord.y - 16;
+																																																																						break;
+																																																																								case 6:
+																																																																											x = server_state.pp.farmer[farmer].coord.x - 16;
+																																																																														y = server_state.pp.farmer[farmer].coord.y;
+																																																																																	break;
+																																																																																			case 7:
+																																																																																						x = server_state.pp.farmer[farmer].coord.x - 16;
+																																																																																									y = server_state.pp.farmer[farmer].coord.y + 16;
+																																																																																												break;		
+																																																																																													}
+																																																																																														
+																																																																																															i = d_bbox_test(bbox, x, y, 16, 16, &p, 1);
+																																																																																																if (i)
+																																																																																																		return p;
+
+																																																																																																			return -1;
+																																																																																																			}
+
+
 void farmer_spawn() {
 	server_state.plist[0].x = 0;
 	server_state.plist[0].y = config.platform.screen_h / 2 * 1000 + 4000;

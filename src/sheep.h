@@ -1,7 +1,7 @@
 #ifndef __SHEEP_H__
 #define	__SHEEP_H__
 
-#define	SHEEP_COUNT		4
+#define	SHEEP_COUNT		39
 #define	SHEEP_AVOID_RADIUS	240
 #define	SHEEP_PANIC_RADIUS	200
 #define	SHEEP_PANIC_RANGE	4150
