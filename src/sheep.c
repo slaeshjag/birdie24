@@ -130,7 +130,7 @@ void sheep_move() {
 
 
 void sheep_loop() {
-	int i, j, dx, dy, f_dx, f_dy, m_dx, m_dy, d, deg;
+	int i, j, dx, dy, f_dx, f_dy, m_dx, m_dy, d;
 	float x, y;
 
 	/* Counting sheep... Zzz... */
