@@ -3,6 +3,9 @@
 #include <stdbool.h>
 #include <string.h>
 
+#include "network.h"
+#include "main.h"
+
 #ifdef _WIN32
 
 #include <ws2tcpip.h>
@@ -23,9 +26,6 @@
 #define closesocket close
 
 #endif
-
-#include "network.h"
-#include "main.h"
 
 struct Peer {
 	struct sockaddr_in addr;

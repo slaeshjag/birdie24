@@ -3,20 +3,6 @@
 #include <string.h>
 #include <stdbool.h>
 
-#ifdef _WIN32
-
-#include <windows.h>
-
-#define pthread_t HANDLE
-#define pthread_create(handle, nc1, func, nc2) (*handle = CreateThread(NULL, 0, (func), NULL, 0, NULL))
-#define pthread_cancel(thread) (TerminateThread((thread), 0))
-
-#else
-
-#include <pthread.h>
-
-#endif
-
 #include "client.h"
 #include "main.h"
 #include "network.h"
@@ -24,6 +10,20 @@
 #include "server.h"
 #include "lobby.h"
 #include "game.h"
+
+#ifdef _WIN32
+
+#include <windows.h>
+
+#define pthread_t HANDLE
+#define pthread_create(handle, nc1, func, nc2) (*(handle) = CreateThread(NULL, 0, (func), NULL, 0, NULL))
+#define pthread_cancel(thread) (TerminateThread((thread), 0))
+
+#else
+
+#include <pthread.h>
+
+#endif
 
 pthread_t client_recv_thread;
 
