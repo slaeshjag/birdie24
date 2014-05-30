@@ -17,12 +17,16 @@ void sheep_spawn() {
 	for (i = 0; i < h; i++) {
 		server_state.sheep[i].x = rand() % 200;
 		server_state.sheep[i].y = rand() % config.platform.screen_h - 16;
+		server_state.sheep[i].x *= 1000;
+		server_state.sheep[i].y *= 1000;
 	}
 
 	/* Side B */
 	for (; i < SHEEP_COUNT; i++) {
 		server_state.sheep[i].x = rand() % 200 - 200 + config.platform.screen_w;
 		server_state.sheep[i].y = rand() % config.platform.screen_h - 16;
+		server_state.sheep[i].x *= 1000;
+		server_state.sheep[i].y *= 1000;
 	}
 
 	for (i = 0; i < FARMER_COUNT; i++)
