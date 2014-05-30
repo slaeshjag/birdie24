@@ -11,8 +11,8 @@ static int conv_array[3][3] = {
 
 static DARNIT_BBOX *bbox;
 
-static int farmer_stunn_x_vel[8] = { 0, 1410, 2000, 1410, 0, -1410, -2000, -1410 };
-static int farmer_stunn_y_vel[8] = { 2000, 1410, 0, -1410, -2000, -1410, 0, 1410 };
+static int farmer_stunn_x_vel[8] = { 0, 141, 200, 141, 0, -141, -200, -141 };
+static int farmer_stunn_y_vel[8] = { 200, 141, 0, -141, -200, -141, 0, 141 };
 void farmer_prepare() {
 	bbox = d_bbox_new(FARMER_COUNT);
 	d_bbox_set_indexkey(bbox);
@@ -166,8 +166,8 @@ void farmer_move() {
 
 	for (i = 0; i < FARMER_COUNT; i++) {
 		if (server_state.plist[i].stab_timeout) {
-			server_state.plist[i].dx = farmer_stunn_x_vel[server_state.pp.farmer[i].coord.dir] - (FARMER_STAB_TIME - server_state.plist[i].stab_timeout) * 10;
-			server_state.plist[i].dy = farmer_stunn_y_vel[server_state.pp.farmer[i].coord.dir] - (FARMER_STAB_TIME - server_state.plist[i].stab_timeout) * 10;
+			server_state.plist[i].dx = farmer_stunn_x_vel[server_state.pp.farmer[i].coord.dir];
+			server_state.plist[i].dy = farmer_stunn_y_vel[server_state.pp.farmer[i].coord.dir];
 			server_state.plist[i].stab_timeout--;
 			goto update;
 		}
