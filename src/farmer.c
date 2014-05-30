@@ -151,7 +151,7 @@ void farmer_move_loop(int farmer) {
 void farmer_stab(int src) {
 	int target;
 	target = farmer_get_farmer_facing(src);
-	if (target > 0)
+	if (target >= 0)
 		server_state.plist[target].stab_timeout = FARMER_STAB_TIME;
 
 	return;
@@ -183,14 +183,14 @@ void farmer_move() {
 			}
 		}
 
+		server_state.plist[i].dx += nx;
+		server_state.plist[i].dy += ny;
 		server_state.pp.farmer[i].coord.moving = (xd || yd);
 
 		update:
 		/* TODO: Check collision */
 
 		server_state.pp.farmer[i].action_stabbed = (server_state.plist[i].stab_timeout > 0);
-		server_state.plist[i].dx += nx;
-		server_state.plist[i].dy += ny;
 		farmer_move_loop(i);
 		server_state.pp.farmer[i].coord.x = server_state.plist[i].x / 1000;
 		server_state.pp.farmer[i].coord.y = server_state.plist[i].y / 1000;
