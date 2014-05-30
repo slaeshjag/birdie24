@@ -4,6 +4,7 @@
 #include "main.h"
 #include <limits.h>
 #include <darnit/darnit.h>
+#include <math.h>
 
 #define	ABS(x)		((x) < 0 ? -(x) : (x))
 
@@ -150,7 +151,8 @@ void sheep_move() {
 
 
 void sheep_loop() {
-	int i, j, dx, dy, f_dx, f_dy, m_dx, m_dy;
+	int i, j, dx, dy, f_dx, f_dy, m_dx, m_dy, d;
+	float x, y;
 
 	/* Counting sheep... Zzz... */
 	for (i = 0; i < SHEEP_COUNT; i++) {
@@ -208,7 +210,23 @@ void sheep_loop() {
 
 		m_dx = f_dx;
 		m_dy = f_dy;
-		server_state.pp.sheep[i].dir = 0;
+		if (!m_dx) {
+			if (m_dy >= 0)
+				d = 0;
+			else
+				d = 8;
+		} else {
+			x = m_dx;
+			y = m_dy;
+			d = atan(y/x) * 1800. / M_PI;
+			if (x < 0)
+				d += 1800;
+			d += 112;
+			d /= 225;
+			if (d == 16)
+				d = 0;
+		}
+		server_state.pp.sheep[i].dir = d;
 
 		server_state.sheep[i].dx += m_dx;
 		server_state.sheep[i].dy += m_dy;
