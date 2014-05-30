@@ -155,6 +155,7 @@ void server_start(const char *game_name) {
 	strcpy(server_state.map, "arne.ldmz");
 
 	sheep_spawn();
+	farmer_spawn();
 
 	return;
 }
