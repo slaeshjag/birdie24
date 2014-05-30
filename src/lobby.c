@@ -116,14 +116,16 @@ void lobby_playername_loop() {
 	switch(d_menu_loop(lobby_playername.inputfield_playername)) {
 		case -1:
 			break;
-		case 0:
 		case -2:
 			//d_keys_set(d_keys_get());
 			game_state(GAME_STATE_MENU);
 			break;
 		default:
-			//d_keys_set(d_keys_get());
-			game_state(GAME_STATE_LOBBY);
+			if(strlen(config.player_name) <= 0) {
+				game_state(GAME_STATE_MENU);
+			} else {
+				game_state(GAME_STATE_LOBBY);
+			}
 			break;
 	}
 }
