@@ -12,8 +12,8 @@ void farmer_spawn() {
 	int i;
 
 	for (i = 0; i < FARMER_COUNT; i++) {
-		server_state.plist[i].x = config.platform.screen_w / 2;
-		server_state.plist[i].y = config.platform.screen_h / FARMER_COUNT * i;
+		server_state.plist[i].x = config.platform.screen_w / 2 * 1000;
+		server_state.plist[i].y = config.platform.screen_h / FARMER_COUNT * i * 1000;
 	}
 
 	farmer_move();
