@@ -1,10 +1,25 @@
 #include "farmer.h"
 #include "server.h"
+#include "main.h"
 #include <darnit/darnit.h>
 
 static int conv_array[3][3] = {
 	{ 5, 6, 7 }, { 4, -1, 0 }, { 3, 2, 1 }
 };
+
+
+void farmer_spawn() {
+	int i;
+
+	for (i = 0; i < FARMER_COUNT; i++) {
+		server_state.plist[i].x = config.platform.screen_w / 2;
+		server_state.plist[i].y = config.platform.screen_h / FARMER_COUNT * i;
+	}
+
+	farmer_move();
+	return;
+}
+
 
 void farmer_move() {
 	int i, nx, ny, xd, yd, angle;

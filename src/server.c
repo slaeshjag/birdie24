@@ -154,6 +154,9 @@ void server_start(const char *game_name) {
 	/* TODO: Make tihs configurable */
 	strcpy(server_state.map, "arne.ldmz");
 
+	sheep_spawn();
+	farmer_spawn();
+
 	return;
 }
 
@@ -170,6 +173,7 @@ void server_loop() {
 	switch (config.game_state) {
 		case GAME_STATE_GAME:
 			farmer_move();
+			sheep_loop();
 			break;
 		case GAME_STATE_LOBBY_HOST:
 			if (!(cnt & 0xF)) {

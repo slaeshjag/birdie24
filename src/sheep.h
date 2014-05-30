@@ -2,7 +2,7 @@
 #define	__SHEEP_H__
 
 #define	SHEEP_COUNT		299
-
+#define	SHEEP_AVOID_RADIUS	150
 
 struct sheep {
 	int			x;
@@ -10,6 +10,7 @@ struct sheep {
 
 };
 
+void sheep_spawn();
 void sheep_loop();
 
 #endif
