@@ -45,7 +45,6 @@ void sheep_loop() {
 	for (i = 0; i < SHEEP_COUNT; i++) {
 		f_dx = f_dy = 0;
 		for (j = 0; j < FARMER_COUNT && !server_state.sheep[i].panic; j++) {
-			goto no_antigravity;
 			/* Farmer anti-gravity */
 			dx = ABS(server_state.sheep[i].x - server_state.plist[j].x);
 			dy = ABS(server_state.sheep[i].y - server_state.plist[j].y);
@@ -64,7 +63,8 @@ void sheep_loop() {
 			dy *= 10;
 			f_dx += dx;
 			f_dy += dy;
-		
+	
+			continue;
 			no_antigravity:
 			/* leader sheep anti-anti-gravity */
 			dx = ABS(server_state.sheep[i].x - server_state.sheep[server_state.pp.leader_sheep[j]].x);
