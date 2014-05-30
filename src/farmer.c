@@ -166,8 +166,8 @@ void farmer_move() {
 
 	for (i = 0; i < FARMER_COUNT; i++) {
 		if (server_state.plist[i].stab_timeout) {
-			server_state.plist[i].dx += farmer_stunn_x_vel[server_state.pp.farmer[i].coord.dir];
-			server_state.plist[i].dy += farmer_stunn_y_vel[server_state.pp.farmer[i].coord.dir];
+			server_state.plist[i].dx += farmer_stunn_x_vel[server_state.pp.farmer[i].coord.dir >> 1];
+			server_state.plist[i].dy += farmer_stunn_y_vel[server_state.pp.farmer[i].coord.dir >> 1];
 			server_state.plist[i].stab_timeout--;
 			goto update;
 		}
