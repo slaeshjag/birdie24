@@ -20,6 +20,7 @@ enum proto_packet_type {
 	PROTO_TYPE_JOIN_GREET,
 	PROTO_TYPE_IDLE_BROADCAST,
 	PROTO_TYPE_CHAT,
+	PROTO_TYPE_TRACTOR,
 };
 
 struct proto_coord {
@@ -76,6 +77,12 @@ struct proto_idling_broadcast {
 	enum proto_packet_type		type;
 
 	char				player_name[PROTO_PLAYER_NAME];
+};
+
+struct proto_tractor {
+	enum proto_packet_type		type;
+
+	struct proto_coord		coord;
 };
 
 

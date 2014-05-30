@@ -120,7 +120,8 @@ int server_get_player(unsigned long addr) {
 
 void server_handle_packet(void *packet, unsigned long addr) {
 	int p;
-
+	
+	
 	switch (*((enum proto_packet_type *) packet)) {
 		case PROTO_TYPE_BROADCAST:
 		case PROTO_TYPE_LOBBY_STAT:
@@ -130,6 +131,7 @@ void server_handle_packet(void *packet, unsigned long addr) {
 			fprintf(stderr, "Herpaderp wrong packet type %i\n", *((enum proto_packet_type *) packet));
 			break;
 		case PROTO_TYPE_CONTROL:
+			//if(server_state.intro_time >= SERVER_INTRO_LENGTH)
 			server_handle_control(packet, server_get_player(addr));
 			break;
 		case PROTO_TYPE_KEEPALIVE:
@@ -171,12 +173,18 @@ void server_loop() {
 
 	if (!server_state.enabled)
 		return;
-	server_check_alive();
-
 	switch (config.game_state) {
 		case GAME_STATE_GAME:
-			farmer_move();
-			sheep_loop();
+			printf("%i\n", server_state.intro_time);
+			if(server_state.intro_time > SERVER_INTRO_LENGTH) {
+				farmer_move();
+				sheep_loop();
+			} else {
+				if(server_state.intro_time < 2)
+					sheep_loop();
+				farmer_intro();
+				server_state.intro_time++;
+			}
 			break;
 		case GAME_STATE_LOBBY_HOST:
 			if (!(cnt & 0xF)) {

@@ -25,6 +25,7 @@ struct Config {
 	DARNIT_TILESHEET *tileset;
 	DARNIT_TILESHEET *spriteset;
 	DARNIT_TILESHEET *menu_background;
+	DARNIT_TILESHEET *tractor;
 	DARNIT_SOUND *music_hillbilly;
 	DARNIT_MAP *map;
 	
