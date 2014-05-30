@@ -172,6 +172,7 @@ void server_loop() {
 	switch (config.game_state) {
 		case GAME_STATE_GAME:
 			farmer_move();
+			sheep_loop();
 			break;
 		case GAME_STATE_LOBBY_HOST:
 			if (!(cnt & 0xF)) {
