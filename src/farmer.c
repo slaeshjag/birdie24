@@ -74,7 +74,7 @@ void farmer_spawn() {
 	server_state.pp.farmer[0].coord.dir = 4;
 	
 	if(FARMER_COUNT >= 2) {
-		server_state.plist[1].x = config.platform.screen_w - 16000;
+		server_state.plist[1].x = config.platform.screen_w * 1000 - 16000 ;
 		server_state.plist[1].y = config.platform.screen_h / 2 * 1000 + 4000;
 		server_state.plist[1].dx = -FARMER_INTRO_SPEED;
 		server_state.plist[1].dy = 0;
