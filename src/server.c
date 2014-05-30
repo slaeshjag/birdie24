@@ -104,6 +104,7 @@ void server_handle_control(struct proto_control_packet *cp, int player_id) {
 	server_state.plist[player_id].right = cp->right;
 	server_state.pp.farmer[player_id].action_yell = cp->yell;
 	server_state.pp.farmer[player_id].action_stab = cp->stab;
+	server_state.plist[player_id].timeout = 0;
 	return;
 }
 
