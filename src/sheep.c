@@ -69,11 +69,11 @@ void sheep_spawn() {
 	return;
 }
 
-int sheep_test_collide(int x, int y, int dx, int dy) {
+int sheep_test_collide(int x, int y, int dx, int dy, int t) {
 	int c;
 	int tx, ty;
 	c =  d_bbox_test(bbox, x + dx, y + dy, 16, 16, server_state.sheep_collide, SHEEP_COUNT);
-	if (c > 0) {
+	if (c > t) {
 		return 1;
 	}
 
@@ -99,7 +99,7 @@ int sheep_test_collide(int x, int y, int dx, int dy) {
 		return 1;
 	if (x + dx < 1)
 		return 1;
-	if (y + dy< 1)
+	if (y + dy < 1)
 		return 1;
 	return 0;
 }
@@ -137,20 +137,18 @@ void sheep_move() {
 		move = 0;
 		for (i = 0; i < SHEEP_COUNT; i++) {
 			if (ABS(server_state.sheep[i].dx) >= 1000) {
-				server_state.sheep[i].x += (server_state.sheep[i].dx < 0) ? -1000 : 1000;
+				if (!sheep_test_collide(server_state.sheep[i].x / 1000, server_state.sheep[i].y / 1000, (server_state.sheep[i].dx < 0) ? -1 : 1, 0, 1))
+					server_state.sheep[i].x += (server_state.sheep[i].dx < 0) ? -1000 : 1000;
 				server_state.sheep[i].dx += (server_state.sheep[i].dx < 0) ? 1000 : -1000;
 				move = 1;
-				if (sheep_collide(i))
-					server_state.sheep[i].x -= (server_state.sheep[i].dx < 0) ? -1000 : 1000;
 					
 			}
 			
 			if (ABS(server_state.sheep[i].dy) >= 1000) {
-				server_state.sheep[i].y += (server_state.sheep[i].dy < 0) ? -1000 : 1000;
+				if (!sheep_test_collide(server_state.sheep[i].x / 1000, server_state.sheep[i].y / 1000, 0, (server_state.sheep[i].dy < 0) ? -1 : 1, 1))
+					server_state.sheep[i].y += (server_state.sheep[i].dy < 0) ? -1000 : 1000;
 				server_state.sheep[i].dy += (server_state.sheep[i].dy < 0) ? 1000 : -1000;
 				move = 1;
-				if (sheep_collide(i))
-					server_state.sheep[i].y -= (server_state.sheep[i].dy < 0) ? -1000 : 1000;
 			}
 
 			d_bbox_move(bbox, i, server_state.sheep[i].x / 1000, server_state.sheep[i].y / 1000);
@@ -215,6 +213,7 @@ void sheep_loop() {
 		if (server_state.sheep[i].panic) {
 			f_dx = server_state.sheep[i].pg_x;
 			f_dy = server_state.sheep[i].pg_y;
+			fprintf(stderr, "%i %i\n", f_dx, f_dy);
 			server_state.sheep[i].panic = 0;
 		} else {
 			server_state.sheep[i].pg_x = 0;
@@ -268,10 +267,10 @@ void sheep_panic(int x, int y) {
 		server_state.sheep[server_state.sheep_collide[i]].panic = 1;
 		if (!server_state.sheep[server_state.sheep_collide[i]].pg_x) {
 			fprintf(stderr, "Setting new value\n");
-			server_state.sheep[server_state.sheep_collide[i]].pg_x = rand() % SHEEP_PANIC_RANGE;
+			server_state.sheep[server_state.sheep_collide[i]].pg_x = rand() % SHEEP_PANIC_RANGE * ((rand() & 1) ? -1 : 1) + 2000 * ((rand() & 1) ? -1 : 1);
 		}
 		if (!server_state.sheep[server_state.sheep_collide[i]].pg_y)
-			server_state.sheep[server_state.sheep_collide[i]].pg_y = rand() % SHEEP_PANIC_RANGE;
+			server_state.sheep[server_state.sheep_collide[i]].pg_y = rand() % SHEEP_PANIC_RANGE * ((rand() & 1) ? -1 : 1) + 2000 * ((rand() & 1) ? -1 : 1);
 	}
 
 	return;
