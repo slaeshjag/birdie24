@@ -40,9 +40,9 @@ static void update_lists(struct List *player, struct List *game) {
 	d_text_surface_reset(lobby.list_games);
 	
 	d_text_surface_color_next(lobby.list_players, 255, 255, 255);
-	d_text_surface_string_append(lobby.list_players, "Players\n\n");
+	d_text_surface_string_append(lobby.list_players, "Players in lobby\n\n");
 	d_text_surface_color_next(lobby.list_games, 255, 255, 255);
-	d_text_surface_string_append(lobby.list_games, "Games\n\n");
+	d_text_surface_string_append(lobby.list_games, "LAN Games\n\n");
 	
 	#if 0
 	for(i = 0; i < players; i++) {
@@ -75,7 +75,7 @@ static void update_player_list(DARNIT_TEXT_SURFACE *surface, char player[][PROTO
 	d_text_surface_reset(surface);
 	
 	d_text_surface_color_next(surface, 255, 255, 255);
-	d_text_surface_string_append(surface, "Players\n\n");
+	d_text_surface_string_append(surface, "Players in game\n\n");
 	
 	for(i = 0; i < FARMER_COUNT; i++) {
 		if(!player[i][0])
@@ -88,15 +88,15 @@ static void update_player_list(DARNIT_TEXT_SURFACE *surface, char player[][PROTO
 
 void lobby_init() {
 	lobby.line = d_render_line_new(1, 2);
-	d_render_line_move(lobby.line, 0, config.platform.screen_w/2, 0, config.platform.screen_w/2, config.platform.screen_h);
+	d_render_line_move(lobby.line, 0, config.platform.screen_w - 320, 0, config.platform.screen_w - 320, config.platform.screen_h);
 	
 	lobby.list_players = d_text_surface_color_new(config.font_std, 2048, 300, 64, 0);
-	lobby.list_games = d_text_surface_color_new(config.font_std, 2048, 300, config.platform.screen_w/2 + 64, 0);
+	lobby.list_games = d_text_surface_color_new(config.font_std, 2048, 300, config.platform.screen_w - 300, 0);
 	
 	lobby_join.list_players = d_text_surface_color_new(config.font_std, 2048, 300, 64, 0);
 	lobby_host.start_game = d_text_surface_color_new(config.font_std, 32, 300, 64, config.platform.screen_h - 96);
 	d_text_surface_color_next(lobby_host.start_game, 255, 0, 0);
-	d_text_surface_string_append(lobby_host.start_game, "Start game");
+	d_text_surface_string_append(lobby_host.start_game, "Press enter to start game");
 	
 	update_lists(NULL, lobby_client.client);
 	
@@ -110,6 +110,7 @@ void lobby_init() {
 }
 
 void lobby_playername_loop() {
+	d_render_tile_blit(config.menu_background, 0, 0, 0);
 	d_text_surface_draw(lobby_playername.text_playername);
 	//printf("arne %i\n", d_menu_loop(lobby_playername.inputfield_playername));
 	switch(d_menu_loop(lobby_playername.inputfield_playername)) {
@@ -117,14 +118,19 @@ void lobby_playername_loop() {
 			break;
 		case 0:
 		case -2:
-			d_keys_set(d_keys_get());
+			//d_keys_set(d_keys_get());
 			game_state(GAME_STATE_MENU);
 			break;
 		default:
-			d_keys_set(d_keys_get());
+			//d_keys_set(d_keys_get());
 			game_state(GAME_STATE_LOBBY);
 			break;
 	}
+}
+
+void lobby_playername_wait() {
+	//d_menu_selection_wait(lobby_playername.inputfield_playername);
+	lobby_playername.inputfield_playername = d_menu_textinput_new(64, 128, config.font_std, config.player_name, PROTO_PLAYER_NAME - 1, config.platform.screen_w);
 }
 
 void lobby_loop() {
@@ -133,6 +139,7 @@ void lobby_loop() {
 	int i;
 	struct List *game = lobby_client.client;
 	
+	d_render_tile_blit(config.menu_background, 0, 0, 0);
 	d_render_line_draw(lobby.line, 1);
 	d_text_surface_draw(lobby.list_players);
 	d_text_surface_draw(lobby.list_games);
@@ -185,6 +192,8 @@ void lobby_join_loop() {
 	keys = d_keys_get();
 	d_keys_set(keys);
 	
+	d_render_tile_blit(config.menu_background, 0, 0, 0);
+	
 	if(!tick) {
 		packet.type = PROTO_TYPE_JOIN;
 		packet.player_id = -1;
@@ -209,6 +218,8 @@ void lobby_host_loop() {
 	
 	keys = d_keys_get();
 	d_keys_set(keys);
+	
+	d_render_tile_blit(config.menu_background, 0, 0, 0);
 	
 	if(!tick) {
 		packet.type = PROTO_TYPE_JOIN;

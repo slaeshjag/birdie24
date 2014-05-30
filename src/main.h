@@ -24,6 +24,7 @@ struct Config {
 	DARNIT_FONT *font_big;
 	DARNIT_TILESHEET *tileset;
 	DARNIT_TILESHEET *spriteset;
+	DARNIT_TILESHEET *menu_background;
 	DARNIT_MAP *map;
 	
 	char player_name[PROTO_PLAYER_NAME];
