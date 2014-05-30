@@ -65,6 +65,7 @@ void server_handle_join(struct proto_join_packet *pj, unsigned long addr) {
 	strcpy(server_state.plist[i].player_name, pj->player_name);
 	server_state.plist[i].addr = addr;
 	server_state.plist[i].timeout = 0;
+	pj->addr = addr;
 
 	/* Emit join greet */
 	jg.type = PROTO_TYPE_JOIN_GREET;
