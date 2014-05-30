@@ -7,7 +7,9 @@
 struct sheep {
 	int			x;
 	int			y;
-
+	int			panic;
+	int			pg_x;
+	int			pg_y;
 };
 
 void sheep_spawn();
