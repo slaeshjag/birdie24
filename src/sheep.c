@@ -165,6 +165,8 @@ void sheep_loop() {
 	int i, j, dx, dy, f_dx, f_dy, m_dx, m_dy, d;
 	float x, y;
 
+	fprintf(stderr, "sheep loop\n");
+
 	/* Counting sheep... Zzz... */
 	for (i = 0; i < SHEEP_COUNT; i++) {
 		f_dx = f_dy = 0;
@@ -260,12 +262,16 @@ void sheep_panic(int x, int y) {
 	int c, i;
 	c =  d_bbox_test(bbox, x - SHEEP_PANIC_RADIUS / 2, y - SHEEP_PANIC_RADIUS / 2, SHEEP_PANIC_RADIUS, SHEEP_PANIC_RADIUS, server_state.sheep_collide, SHEEP_COUNT);
 
+	fprintf(stderr, "Causung panic\n");
+
 	for (i = 0; i < c; i++) {
 		server_state.sheep[server_state.sheep_collide[i]].panic = 1;
-		if (!server_state.sheep[server_state.sheep_collide[i]].pg_x)
+		if (!server_state.sheep[server_state.sheep_collide[i]].pg_x) {
+			fprintf(stderr, "Setting new value\n");
 			server_state.sheep[server_state.sheep_collide[i]].pg_x = rand() % SHEEP_PANIC_RANGE;
+		}
 		if (!server_state.sheep[server_state.sheep_collide[i]].pg_y)
-			server_state.sheep[server_state.sheep_collide[i]].pg_y = rand() % SHEEP_PANIC_RANGE;;
+			server_state.sheep[server_state.sheep_collide[i]].pg_y = rand() % SHEEP_PANIC_RANGE;
 	}
 
 	return;
