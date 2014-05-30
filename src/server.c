@@ -51,7 +51,7 @@ int server_get_players() {
 void server_handle_join(struct proto_join_packet *pj, unsigned long addr) {
 	int i;
 	struct proto_join_greet jg;
-
+	
 	for (i = 0; i < FARMER_COUNT; i++)
 		if (server_state.plist[i].used)
 			if (server_state.plist[i].addr == addr)
@@ -65,6 +65,7 @@ void server_handle_join(struct proto_join_packet *pj, unsigned long addr) {
 	strcpy(server_state.plist[i].player_name, pj->player_name);
 	server_state.plist[i].addr = addr;
 	server_state.plist[i].timeout = 0;
+	pj->addr = addr;
 
 	/* Emit join greet */
 	jg.type = PROTO_TYPE_JOIN_GREET;
@@ -76,6 +77,17 @@ void server_handle_join(struct proto_join_packet *pj, unsigned long addr) {
 	for (i = 0; i < FARMER_COUNT; i++)
 		if (server_state.plist[i].used)
 			network_send(server_state.plist[i].addr, pj, sizeof(*pj));
+	
+	/* Tell the newly joined person what other players are in */
+	for (i = 0; i < FARMER_COUNT; i++)
+		if (server_state.plist[i].used && server_state.plist[i].addr != addr) {
+			strcpy(pj->player_name, server_state.plist[i].player_name);
+			pj->player_id = i;
+			pj->addr = server_state.plist[i].addr;
+			network_send(addr, pj, sizeof(*pj));
+		}
+	
+
 
 	return;
 }
@@ -139,6 +151,9 @@ void server_start(const char *game_name) {
 	server_state.enabled = 1;
 	strcpy(server_state.name, game_name);
 
+	/* TODO: Make tihs configurable */
+	strcpy(server_state.map, "arne.ldmz");
+
 	return;
 }
 
@@ -160,7 +175,7 @@ void server_loop() {
 			if (!(cnt & 0xF)) {
 				cb.type = PROTO_TYPE_BROADCAST;
 				strcpy(cb.game_name, server_state.name);
-				strcpy(cb.map_name, "arne.ldmz");
+				strcpy(cb.map_name, server_state.map);
 				cb.slots = FARMER_COUNT;
 				cb.slots_left = FARMER_COUNT - server_get_players();
 				network_broadcast(&cb, sizeof(cb));

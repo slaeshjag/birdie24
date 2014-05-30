@@ -5,6 +5,7 @@
 
 #ifdef _WIN32
 
+#include <ws2tcpip.h>
 #include <winsock2.h>
 #include <windows.h>
 
@@ -45,7 +46,7 @@ int network_init(int _port) {
 		return -1;
 	}
 	
-	setsockopt(sock, SOL_SOCKET, SO_BROADCAST, &broadcast_enabled, sizeof(broadcast_enabled));
+	setsockopt(sock, SOL_SOCKET, SO_BROADCAST, (void *) &broadcast_enabled, sizeof(broadcast_enabled));
 	
 	if(bind(sock, (struct sockaddr *) &addr, sizeof(addr)) < 0) {
 		close(sock);

@@ -33,7 +33,7 @@ void *client_recv(void *arg) {
 					server_handle_packet(&packet, addr);
 					break;
 				}
-				printf("uusd\n");
+				
 				strcpy(config.player.player[packet_join->player_id], packet_join->player_name);
 				
 				break;

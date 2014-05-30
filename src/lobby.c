@@ -162,6 +162,7 @@ void lobby_host_loop() {
 	d_keys_set(keys);
 	
 	if(!tick) {
+		packet.type = PROTO_TYPE_JOIN;
 		packet.player_id = -1;
 		strcpy(packet.player_name, config.player_name);
 		network_send(config.server.addr, &packet, sizeof(struct proto_join_packet));
