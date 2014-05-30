@@ -25,6 +25,9 @@ void sheep_spawn() {
 		server_state.sheep[i].y = rand() % config.platform.screen_h - 16;
 	}
 
+	for (i = 0; i < FARMER_COUNT; i++)
+		server_state.pp.leader_sheep[i] = SHEEP_COUNT / FARMER_COUNT * i;
+
 	fprintf(stderr, "done!\n");
 	return;
 }
@@ -38,12 +41,13 @@ void sheep_loop() {
 	for (i = 0; i < SHEEP_COUNT; i++) {
 		f_dx = f_dy = 0;
 		for (j = 0; j < FARMER_COUNT; j++) {
+			/* Farmer anti-gravity */
 			dx = ABS(server_state.sheep[i].x - server_state.plist[j].x);
 			dy = ABS(server_state.sheep[i].y - server_state.plist[j].y);
 			dx /= 1000;
 			dy /= 1000;
 			if (dx*dx + dy*dy > SHEEP_AVOID_RADIUS)
-				continue;
+				goto no_antigravity;
 
 			dx = SHEEP_AVOID_RADIUS - dx;
 			dy = SHEEP_AVOID_RADIUS - dy;
@@ -53,6 +57,26 @@ void sheep_loop() {
 				dy *= -1;
 			f_dx += dx;
 			f_dy += dy;
+			
+			no_antigravity:
+			/* leader sheep anti-anti-gravity */
+			dx = ABS(server_state.sheep[i].x - server_state.sheep[server_state.pp.leader_sheep[j]].x);
+			dy = ABS(server_state.sheep[i].y - server_state.sheep[server_state.pp.leader_sheep[j]].y);
+			dx /= 1000;
+			dy /= 1000;
+
+			if (dx*dx + dy*dy > SHEEP_AVOID_RADIUS)
+				continue;
+
+			dx = SHEEP_AVOID_RADIUS - dx;
+			dy = SHEEP_AVOID_RADIUS - dy;
+			if (server_state.sheep[i].x - server_state.sheep[server_state.pp.leader_sheep[j]].x > 0)
+				dx *= -1;
+			if (server_state.sheep[i].y - server_state.sheep[server_state.pp.leader_sheep[j]].y > 0)
+				dy *= -1;
+			f_dx += dx;
+			f_dy += dy;
+			
 		}
 	
 

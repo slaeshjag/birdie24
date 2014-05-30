@@ -47,6 +47,7 @@ struct proto_packet {
 	unsigned int			sheep_points[FARMER_COUNT];
 	struct proto_coord		sheep[SHEEP_COUNT];
 	struct proto_farmer		farmer[FARMER_COUNT];
+	unsigned int			leader_sheep[FARMER_COUNT];
 };
 
 
