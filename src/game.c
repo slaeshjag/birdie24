@@ -28,8 +28,8 @@ void game_init() {
 		d_sprite_frame_entry_set(game.farmer.sprite[i], 1, 0, 4*i + 1, 200);
 		d_sprite_frame_entry_set(game.farmer.sprite[i], 1, 1, 4*i + 2, 200);
 		
-		d_sprite_frame_entry_set(game.farmer.sprite[i], 2, 0, 4*i + 0, 200);
-		d_sprite_frame_entry_set(game.farmer.sprite[i], 2, 1, 4*i + 3, 200);
+		d_sprite_frame_entry_set(game.farmer.sprite[i], 2, 0, 4*i + 3, 200);
+		d_sprite_frame_entry_set(game.farmer.sprite[i], 2, 1, 4*i + 0, 200);
 		d_sprite_activate(game.farmer.sprite[i], 0);
 		
 		d_sprite_move(game.farmer.sprite[i], 32, 32);
@@ -72,6 +72,7 @@ void game_loop() {
 	d_tilemap_draw(config.map->layer[1].tilemap);
 	for(i = 0; i < SHEEP_COUNT; i++) {
 		d_sprite_move(game.sheep.sprite[i], game.sheep.sheep[i].x, game.sheep.sheep[i].y);
+		d_sprite_rotate(game.sheep.sprite[i], game.sheep.sheep[i].angle);
 		d_sprite_draw(game.sheep.sprite[i]);
 	}
 	

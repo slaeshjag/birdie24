@@ -2,7 +2,20 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
+
+#ifdef _WIN32
+
+#include <windows.h>
+
+#define pthread_t HANDLE;
+#define pthread_create(handle, nc1, func, nc2) (*handle = CreateThread(NULL, 0, (func), NULL, 0, NULL))
+#define pthread_cancel(thread) (TerminateThread((thread), 0))
+
+#else
+
 #include <pthread.h>
+
+#endif
 
 #include "client.h"
 #include "main.h"
@@ -76,6 +89,7 @@ void *client_recv(void *arg) {
 				for(i = 0; i < SHEEP_COUNT; i++) {
 					game.sheep.sheep[i].x = packet_game->sheep[i].x;
 					game.sheep.sheep[i].y = packet_game->sheep[i].y;
+					game.sheep.sheep[i].angle =  ((packet_game->sheep[i].dir)*225) - 900;
 				}
 				
 				for(i = 0; i < FARMER_COUNT; i++) {

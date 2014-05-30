@@ -9,6 +9,9 @@
 #include <winsock2.h>
 #include <windows.h>
 
+#define inet_ntop InetNtop
+#define inet_pton InetPton
+
 #else
 
 #include <unistd.h>
@@ -54,7 +57,7 @@ int network_init(int _port) {
 	setsockopt(sock, SOL_SOCKET, SO_BROADCAST, (void *) &broadcast_enabled, sizeof(broadcast_enabled));
 	
 	if(bind(sock, (struct sockaddr *) &addr, sizeof(addr)) < 0) {
-		close(sock);
+		closesocket(sock);
 		printf("berit\n");
 		return -1;
 	}
