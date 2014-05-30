@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
+#include <math.h>
 #include <darnit/darnit.h>
 
 #include "main.h"
@@ -31,8 +32,19 @@ void game_init() {
 		d_sprite_frame_entry_set(game.farmer.sprite[i], 2, 0, 4*i + 3, 200);
 		d_sprite_frame_entry_set(game.farmer.sprite[i], 2, 1, 4*i + 0, 200);
 		d_sprite_activate(game.farmer.sprite[i], 0);
-		
 		d_sprite_move(game.farmer.sprite[i], 32, 32);
+		
+		game.farmer.sprite_pitchfork[i] = d_sprite_new(config.spriteset);
+		d_sprite_frame_entry_set(game.farmer.sprite_pitchfork[i], 0, 0, 19, 100);
+		d_sprite_frame_entry_set(game.farmer.sprite_pitchfork[i], 0, 1, 20, 100);
+		d_sprite_activate(game.farmer.sprite_pitchfork[i], 0);
+		d_sprite_animate_start(game.farmer.sprite_pitchfork[i]);
+		
+		game.farmer.sprite_yell[i] = d_sprite_new(config.spriteset);
+		d_sprite_frame_entry_set(game.farmer.sprite_yell[i], 0, 0, 17, 100);
+		d_sprite_frame_entry_set(game.farmer.sprite_yell[i], 0, 1, 18, 100);
+		d_sprite_activate(game.farmer.sprite_yell[i], 0);
+		d_sprite_animate_start(game.farmer.sprite_yell[i]);
 	}
 }
 
@@ -58,6 +70,8 @@ void game_loop() {
 	
 	if(keys.x) {
 		packet.stab = 1;
+	} else if(keys.y) {
+		packet.yell = 1;
 	}
 	
 	if(keys.select) {
@@ -79,10 +93,8 @@ void game_loop() {
 	for(i = 0; i < FARMER_COUNT; i++) {
 		d_sprite_move(game.farmer.sprite[i], game.farmer.farmer[i].x, game.farmer.farmer[i].y);
 		d_sprite_rotate(game.farmer.sprite[i], game.farmer.farmer[i].angle);
-		if(game.farmer.farmer[i].stab) {
-			d_sprite_direction_set(game.farmer.sprite[i], 2);
-			d_sprite_animate_start(game.farmer.sprite[i]);
-		} else if(game.farmer.farmer[i].move) {
+		
+		if(game.farmer.farmer[i].move) {
 			d_sprite_direction_set(game.farmer.sprite[i], 1);
 			d_sprite_animate_start(game.farmer.sprite[i]);
 		} else {
@@ -91,6 +103,18 @@ void game_loop() {
 			d_sprite_animate_stop(game.farmer.sprite[i]);
 		}
 		d_sprite_draw(game.farmer.sprite[i]);
+		
+		if(game.farmer.farmer[i].stab) {
+			d_sprite_move(game.farmer.sprite_pitchfork[i], game.farmer.farmer[i].x + 16.0*cos(M_PI*game.farmer.farmer[i].angle/1800), game.farmer.farmer[i].y - 16.0*sin(M_PI*game.farmer.farmer[i].angle/1800));
+			d_sprite_rotate(game.farmer.sprite_pitchfork[i], game.farmer.farmer[i].angle);
+			d_sprite_draw(game.farmer.sprite_pitchfork[i]);
+			
+		}
+		
+		if(game.farmer.farmer[i].yell) {
+			d_sprite_move(game.farmer.sprite_yell[i], game.farmer.farmer[i].x + 16, game.farmer.farmer[i].y - 16);
+			d_sprite_draw(game.farmer.sprite_yell[i]);
+		}
 	}
 	
 	if(!tick) {
