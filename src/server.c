@@ -53,6 +53,10 @@ void server_handle_join(struct proto_join_packet *pj, unsigned long addr) {
 	struct proto_join_greet jg;
 
 	for (i = 0; i < FARMER_COUNT; i++)
+		if (server_state.plist[i].used)
+			if (server_state.plist[i].addr == addr)
+				return;
+	for (i = 0; i < FARMER_COUNT; i++)
 		if (!server_state.plist[i].used)
 			break;
 	if (i == FARMER_COUNT)

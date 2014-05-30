@@ -34,6 +34,7 @@ struct server_player_state {
 	struct sheep			shee[SHEEP_COUNT];
 	struct proto_packet		pp;
 	char				name[PROTO_GAME_NAME_MAX];
+	char				map[PROTO_MAP_NAME_MAX];
 } server_state;
 
 void server_init();
