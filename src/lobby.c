@@ -6,11 +6,20 @@
 
 #include "main.h"
 #include "proto.h"
+#include "server.h"
 
 static struct {
 	DARNIT_TEXT_SURFACE *text_playername;
 	DARNIT_MENU *inputfield_playername;
 } lobby_playername;
+
+static struct {
+	DARNIT_TEXT_SURFACE *start_game;
+} lobby_host;
+
+static struct {
+	DARNIT_TEXT_SURFACE *list_players;
+} lobby_join;
 
 static struct {
 	DARNIT_LINE *line;
@@ -53,6 +62,22 @@ static void update_lists(const char **player, int players, const char **game, in
 	}
 }
 
+static void update_player_list(DARNIT_TEXT_SURFACE *surface, char player[][PROTO_PLAYER_NAME]) {
+	int i;
+	
+	d_text_surface_reset(surface);
+	
+	d_text_surface_color_next(surface, 255, 255, 255);
+	d_text_surface_string_append(surface, "Players\n\n");
+	
+	for(i = 0; i < FARMER_COUNT; i++) {
+		if(!player[i][0])
+			continue;
+		d_text_surface_color_next(surface, 255, 255, 255);
+		d_text_surface_string_append(surface, player[i]);
+	}
+}
+
 void lobby_init() {
 	//TODO: first item in game list is [Host game]
 	lobby.line = d_render_line_new(1, 2);
@@ -60,6 +85,11 @@ void lobby_init() {
 	
 	lobby.list_players = d_text_surface_color_new(config.font_std, 2048, 300, 64, 0);
 	lobby.list_games = d_text_surface_color_new(config.font_std, 2048, 300, config.platform.screen_w/2 + 64, 0);
+	
+	lobby_join.list_players = d_text_surface_color_new(config.font_std, 2048, 300, 64, 0);
+	lobby_host.start_game = d_text_surface_color_new(config.font_std, 32, 300, 64, config.platform.screen_h - 96);
+	d_text_surface_color_next(lobby_host.start_game, 255, 0, 0);
+	d_text_surface_string_append(lobby_host.start_game, "Start game");
 	
 	update_lists(NULL, 0, &text_host, 1);
 	
@@ -112,10 +142,42 @@ void lobby_loop() {
 	}
 }
 
-void lobby_host_loop() {
-	server_loop();
+void lobby_join_loop() {
+	DARNIT_KEYS keys;
+	
+	keys = d_keys_get();
+	d_keys_set(keys);
+	
+	if(keys.select) {
+		game_state(GAME_STATE_LOBBY);
+	}
 }
 
-void lobby_join_loop() {
+void lobby_host_loop() {
+	struct proto_join_packet packet;
+	static int tick = 0;
+	DARNIT_KEYS keys;
 	
+	keys = d_keys_get();
+	d_keys_set(keys);
+	
+	if(!tick) {
+		packet.player_id = -1;
+		strcpy(packet.player_name, config.player_name);
+		network_send(config.server.addr, &packet, sizeof(struct proto_join_packet));
+		update_player_list(lobby_join.list_players, config.player.player);
+	}
+	server_loop();
+	
+	if(keys.select) {
+		game_state(GAME_STATE_LOBBY);
+	}
+	if(keys.start) {
+		game_state(GAME_STATE_GAME);
+	}
+	
+	d_text_surface_draw(lobby_join.list_players);
+	d_text_surface_draw(lobby_host.start_game);
+	tick++;
+	tick %= 3;
 }

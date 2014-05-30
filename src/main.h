@@ -2,6 +2,7 @@
 #define __MAIN_H_
 #include <darnit/darnit.h>
 #include "proto.h"
+#include "stdbool.h"
 
 enum GameState {
 	GAME_STATE_MENU,
@@ -21,6 +22,17 @@ struct Config {
 	
 	DARNIT_FONT *font_std;
 	char player_name[PROTO_PLAYER_NAME];
+	
+	struct {
+		char player[FARMER_COUNT][PROTO_PLAYER_NAME];
+		int players;
+	} player;
+	
+	struct {
+		unsigned long addr;
+		char name[PROTO_GAME_NAME_MAX];
+		bool connected;
+	} server;
 } extern config;
 
 void game_state(enum GameState new_state);

@@ -10,6 +10,8 @@
 #include "proto.h"
 #include "lobby.h"
 #include "server.h"
+#include "client.h"
+#include "network.h"
 
 static void (*state_loop[GAME_STATES])() = {
 	[GAME_STATE_MENU] = menu_loop,
@@ -40,13 +42,22 @@ void game_state(enum GameState new_state) {
 	keys = d_keys_get();
 	d_keys_set(keys);
 	
+	redo:
 	config.game_state = new_state;
 	/*Contructors*/
 	switch(config.game_state) {
 		case GAME_STATE_LOBBY_HOST:
-			network_init(PORT);
+			if(network_init(PORT) < 0) {
+				printf("nooooes\n");
+				new_state = GAME_STATE_LOBBY;
+				goto redo;
+			}
 			client_init();
-			server_start();
+			strcpy(config.server.name, "arne");
+			server_start("arne");
+			while(!config.server.connected)
+				server_loop();
+			printf("connected.\n");
 			break;
 		default:
 			break;

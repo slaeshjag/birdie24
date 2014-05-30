@@ -21,6 +21,7 @@
 #endif
 
 #include "network.h"
+#include "main.h"
 
 struct Peer {
 	struct sockaddr_in addr;
@@ -37,7 +38,7 @@ int network_init(int _port) {
 		.sin_family = AF_INET,
 	};
 	
-	addr.sin_port = htons(port);
+	addr.sin_port = htons(_port);
 	addr.sin_addr.s_addr = htonl(INADDR_ANY);
 	
 	if((sock = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
@@ -54,8 +55,10 @@ int network_init(int _port) {
 	port = _port;
 	
 	broadcast.addr.sin_family = AF_INET;
-	broadcast.addr.sin_port = port;
+	broadcast.addr.sin_port = htons(port);
 	inet_pton(AF_INET, "255.255.255.255", &broadcast.addr.sin_addr);
+	
+	config.server.connected = false;
 	
 	return 0;
 }
@@ -71,7 +74,7 @@ int network_broadcast(void *buf, size_t bufsize) {
 int network_send(unsigned long to, void *buf, size_t bufsize) {
 	struct sockaddr_in addr;
 	addr.sin_family = AF_INET;
-	addr.sin_port = port;
+	addr.sin_port = htons(port);
 	addr.sin_addr.s_addr = to;
 	return sendto(sock, buf, bufsize, 0, (struct sockaddr *) &addr, sizeof(addr));
 }
