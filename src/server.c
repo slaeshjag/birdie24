@@ -185,6 +185,7 @@ void server_loop() {
 				server_state.pp.time_remain /= 1000;
 				farmer_move();
 				sheep_loop();
+				sheep_counter();
 			} else {
 
 				timer_left = d_time_get() + 1000*90;
