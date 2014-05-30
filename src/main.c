@@ -28,6 +28,7 @@ struct Config config = {
 
 static void init_res() {
 	config.font_std = d_font_load("res/DejaVuSans.ttf", 24, 256, 256);
+	config.tileset = d_tile("res/tile.png", 16, 16, DARNIT_PFORMAT_RGBA8);
 	config.platform = d_platform_get();
 }
 
@@ -47,6 +48,7 @@ void game_state(enum GameState new_state) {
 	/*Contructors*/
 	switch(config.game_state) {
 		case GAME_STATE_LOBBY:
+			server_init();
 			if(network_init(PORT) < 0) {
 				printf("nooooes\n");
 				new_state = GAME_STATE_MENU;

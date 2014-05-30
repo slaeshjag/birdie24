@@ -87,7 +87,6 @@ static void update_player_list(DARNIT_TEXT_SURFACE *surface, char player[][PROTO
 }
 
 void lobby_init() {
-	//TODO: first item in game list is [Host game]
 	lobby.line = d_render_line_new(1, 2);
 	d_render_line_move(lobby.line, 0, config.platform.screen_w/2, 0, config.platform.screen_w/2, config.platform.screen_h);
 	
@@ -155,7 +154,6 @@ void lobby_loop() {
 		if(lobby.selected_game == 0) {
 			game_state(GAME_STATE_LOBBY_HOST);
 		} else {
-			//TODO: join
 			for(i = 0; game; i++, game = game->next) {
 				if(i == lobby.selected_game) {
 					config.server.addr = ((struct LobbyHost *) (game->value))->addr;

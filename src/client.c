@@ -65,6 +65,10 @@ void *client_recv(void *arg) {
 				strcpy(config.player.player[packet_join->player_id], packet_join->player_name);
 				
 				break;
+			
+			case PROTO_TYPE_GAMESTATE:
+				
+				break;
 			default:
 				server_handle_packet(&packet, addr);
 				break;

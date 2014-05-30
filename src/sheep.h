@@ -4,10 +4,10 @@
 #define	SHEEP_COUNT		299
 #define	SHEEP_AVOID_RADIUS	150
 
-struct sheep {
+struct Sheep {
 	int			x;
 	int			y;
-
+	int			angle;
 };
 
 void sheep_spawn();

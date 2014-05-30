@@ -35,6 +35,10 @@ static int port;
 
 int network_init(int _port) {
 	int broadcast_enabled = 1;
+	config.server.connected = false;
+	if(sock >= 0)
+		return 0;
+	
 	struct sockaddr_in addr = {
 		.sin_family = AF_INET,
 	};
@@ -43,6 +47,7 @@ int network_init(int _port) {
 	addr.sin_addr.s_addr = htonl(INADDR_ANY);
 	
 	if((sock = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
+		printf("arne\n");
 		return -1;
 	}
 	
@@ -50,6 +55,7 @@ int network_init(int _port) {
 	
 	if(bind(sock, (struct sockaddr *) &addr, sizeof(addr)) < 0) {
 		close(sock);
+		printf("berit\n");
 		return -1;
 	}
 	
@@ -59,13 +65,13 @@ int network_init(int _port) {
 	broadcast.addr.sin_port = htons(port);
 	inet_pton(AF_INET, "255.255.255.255", &broadcast.addr.sin_addr);
 	
-	config.server.connected = false;
-	
 	return 0;
 }
 
 void network_close() {
 	closesocket(sock);
+	sock = -1;
+	config.server.connected = false;
 }
 
 int network_broadcast(void *buf, size_t bufsize) {
