@@ -13,6 +13,7 @@ struct LobbyClient {
 
 void lobby_init();
 void lobby_playername_loop();
+void lobby_playername_wait();
 void lobby_loop();
 void lobby_host_loop();
 void lobby_join_loop();

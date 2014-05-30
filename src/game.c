@@ -35,8 +35,8 @@ void game_init() {
 		d_sprite_move(game.farmer.sprite[i], 32, 32);
 		
 		game.farmer.sprite_pitchfork[i] = d_sprite_new(config.spriteset);
-		d_sprite_frame_entry_set(game.farmer.sprite_pitchfork[i], 0, 0, 19, 100);
-		d_sprite_frame_entry_set(game.farmer.sprite_pitchfork[i], 0, 1, 20, 100);
+		d_sprite_frame_entry_set(game.farmer.sprite_pitchfork[i], 0, 0, 19, 150);
+		d_sprite_frame_entry_set(game.farmer.sprite_pitchfork[i], 0, 1, 20, 150);
 		d_sprite_activate(game.farmer.sprite_pitchfork[i], 0);
 		d_sprite_animate_start(game.farmer.sprite_pitchfork[i]);
 		
@@ -105,7 +105,7 @@ void game_loop() {
 		d_sprite_draw(game.farmer.sprite[i]);
 		
 		if(game.farmer.farmer[i].stab) {
-			d_sprite_move(game.farmer.sprite_pitchfork[i], game.farmer.farmer[i].x + 16.0*cos(M_PI*game.farmer.farmer[i].angle/1800), game.farmer.farmer[i].y - 16.0*sin(M_PI*game.farmer.farmer[i].angle/1800));
+			d_sprite_move(game.farmer.sprite_pitchfork[i], game.farmer.farmer[i].x + 10.0*cos(M_PI*game.farmer.farmer[i].angle/1800) + 5.0*sin(M_PI*game.farmer.farmer[i].angle/1800), game.farmer.farmer[i].y - 10.0*sin(M_PI*game.farmer.farmer[i].angle/1800) + 5.0*cos(M_PI*game.farmer.farmer[i].angle/1800));
 			d_sprite_rotate(game.farmer.sprite_pitchfork[i], game.farmer.farmer[i].angle);
 			d_sprite_draw(game.farmer.sprite_pitchfork[i]);
 			
