@@ -10,13 +10,13 @@
 
 #define	MAP_COLL(dx, dy)									\
 	tx = (server_state.sheep[sheep].x / 1000 + (dx)) / 16;					\
-	ty = (server_state.sheep[sheep].y / 1000 + (dx)) / 16;					\
+	ty = (server_state.sheep[sheep].y / 1000 + (dy)) / 16;					\
 	if (config.map->layer[1].tilemap->data[config.map->layer[1].tilemap->w * ty + tx])	\
 		return 1;									
 
 #define	MAP_COLL2(x, y, dx, dy)									\
 	tx = (x + (dx)) / 16;								\
-	ty = (y + (dx)) / 16;								\
+	ty = (y + (dy)) / 16;								\
 	if (config.map->layer[1].tilemap->data[config.map->layer[1].tilemap->w * ty + tx])	\
 		return 1;									
 
@@ -69,26 +69,37 @@ void sheep_spawn() {
 	return;
 }
 
-int sheep_test_collide(int x, int y) {
+int sheep_test_collide(int x, int y, int dx, int dy) {
 	int c;
 	int tx, ty;
-	c =  d_bbox_test(bbox, x, y, 16, 16, server_state.sheep_collide, SHEEP_COUNT);
+	c =  d_bbox_test(bbox, x + dx, y + dy, 16, 16, server_state.sheep_collide, SHEEP_COUNT);
 	if (c > 0) {
 		return 1;
 	}
 
-	MAP_COLL2(x, y, 0, 0);
-	MAP_COLL2(x, y, 15, 0);
-	MAP_COLL2(x, y, 0, 15);
-	MAP_COLL2(x, y, 15, 15);
+	if (dx < 0) {
+		MAP_COLL2(x, y, -1, 0);
+		MAP_COLL2(x, y, -1, 15);
+	} else if (dx > 0) {
+		MAP_COLL2(x, y, 16, 0);
+		MAP_COLL2(x, y, 16, 15);
+	}
+
+	if (dy < 0) {
+		MAP_COLL2(x, y, 0, -1);
+		MAP_COLL2(x, y, 15, -1);
+	} else if (dy > 0) {
+		MAP_COLL2(x, y, 0, 16);
+		MAP_COLL2(x, y, 15, 16);
+	}
 	
-	if (x >= config.map->layer[0].tile_w * config.map->layer[0].tilemap->w)
+	if (x + dx >= config.platform.screen_w)
 		return 1;
-	if (y >= config.map->layer[0].tile_h * config.map->layer[0].tilemap->h)
+	if (y + dy >= config.platform.screen_h)
 		return 1;
-	if (x < 1)
+	if (x + dx < 1)
 		return 1;
-	if (y < 1)
+	if (y + dy< 1)
 		return 1;
 	return 0;
 }
@@ -106,9 +117,9 @@ int sheep_collide(int sheep) {
 	MAP_COLL(0, 15);
 	MAP_COLL(15, 15);
 
-	if (server_state.sheep[sheep].x / 1000 >= config.map->layer[0].tile_w * config.map->layer[0].tilemap->w)
+	if (server_state.sheep[sheep].x / 1000 >= config.platform.screen_w)
 		return 1;
-	if (server_state.sheep[sheep].y / 1000 >= config.map->layer[0].tile_h * config.map->layer[0].tilemap->h)
+	if (server_state.sheep[sheep].y / 1000 >= config.platform.screen_h)
 		return 1;
 	if (server_state.sheep[sheep].x < 1000)
 		return 1;

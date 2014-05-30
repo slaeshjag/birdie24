@@ -4,7 +4,7 @@
 #include <stdbool.h>
 
 #define	FARMER_COUNT		2
-#define	FARMER_SPEED		240
+#define	FARMER_SPEED		120
 
 struct Farmer {
 	int			x;
