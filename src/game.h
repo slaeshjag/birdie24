@@ -8,8 +8,13 @@ struct Game {
 		struct Sheep sheep[SHEEP_COUNT];
 		DARNIT_SPRITE *sprite[SHEEP_COUNT];
 	} sheep;
+	struct {
+		struct Farmer farmer[FARMER_COUNT];
+		DARNIT_SPRITE *sprite[FARMER_COUNT];
+	} farmer;
 } extern game;
 
+void game_init();
 void game_loop();
 
 #endif

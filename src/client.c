@@ -10,6 +10,7 @@
 #include "proto.h"
 #include "server.h"
 #include "lobby.h"
+#include "game.h"
 
 pthread_t client_recv_thread;
 
@@ -30,7 +31,9 @@ static void add_lobby_game(char *name, unsigned long addr) {
 }
 
 void *client_recv(void *arg) {
+	int i;
 	struct proto_packet packet;
+	struct proto_packet *packet_game;
 	struct proto_join_packet *packet_join;
 	struct proto_control_broadcast *packet_broadcast;
 	unsigned long addr;
@@ -65,8 +68,17 @@ void *client_recv(void *arg) {
 				strcpy(config.player.player[packet_join->player_id], packet_join->player_name);
 				
 				break;
-			
 			case PROTO_TYPE_GAMESTATE:
+				packet_game = (void *) &packet;
+				for(i = 0; i < SHEEP_COUNT; i++) {
+					game.sheep.sheep[i].x = packet_game->sheep[i].x;
+					game.sheep.sheep[i].y = packet_game->sheep[i].y;
+				}
+				
+				for(i = 0; i < FARMER_COUNT; i++) {
+					game.farmer.farmer[i].x = packet_game->farmer[i].coord.x;
+					game.farmer.farmer[i].y = packet_game->farmer[i].coord.y;
+				}
 				
 				break;
 			default:

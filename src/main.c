@@ -28,7 +28,7 @@ struct Config config = {
 
 static void init_res() {
 	config.font_std = d_font_load("res/DejaVuSans.ttf", 24, 256, 256);
-	config.tileset = d_render_tilesheet_load("res/tile.png", 16, 16, DARNIT_PFORMAT_RGBA8);
+	config.tileset = d_render_tilesheet_load("res/sprites.png", 16, 16, DARNIT_PFORMAT_RGBA8);
 	config.platform = d_platform_get();
 }
 
@@ -73,6 +73,7 @@ int main(int argc, char **argv) {
 	init_res();
 	proto_init();
 	lobby_init();
+	game_init();
 	
 	for(;;) {
 		d_render_begin();
