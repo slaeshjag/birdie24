@@ -28,7 +28,7 @@ void farmer_move() {
 		nx = server_state.plist[i].x;
 		ny = server_state.plist[i].y;
 		xd = -1 * server_state.plist[i].left + server_state.plist[i].right;
-		yd = -1 * server_state.plist[i].right + server_state.plist[i].down;
+		yd = -1 * server_state.plist[i].up + server_state.plist[i].down;
 
 		nx += d_last_frame_time() * FARMER_SPEED * xd;
 		ny += d_last_frame_time() * FARMER_SPEED * yd;
