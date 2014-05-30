@@ -81,7 +81,7 @@ void server_handle_join(struct proto_join_packet *pj, unsigned long addr) {
 	/* Tell the newly joined person what other players are in */
 	for (i = 0; i < FARMER_COUNT; i++)
 		if (server_state.plist[i].used && server_state.plist[i].addr != addr) {
-			strcpy(pj->player_name, server_state.plist[i].name);
+			strcpy(pj->player_name, server_state.plist[i].player_name);
 			pj->player_id = i;
 			pj->addr = server_state.plist[i].addr;
 			network_send(addr, pj, sizeof(*pj));
@@ -150,7 +150,9 @@ void server_start(const char *game_name) {
 	server_init();
 	server_state.enabled = 1;
 	strcpy(server_state.name, game_name);
-	strspy(server_state.map, "arne.ldmz");
+
+	/* TODO: Make tihs configurable */
+	strcpy(server_state.map, "arne.ldmz");
 
 	return;
 }
