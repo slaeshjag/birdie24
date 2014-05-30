@@ -11,6 +11,7 @@ struct Game {
 	struct {
 		struct Farmer farmer[FARMER_COUNT];
 		DARNIT_SPRITE *sprite[FARMER_COUNT];
+		DARNIT_SPRITE *sprite_pitchfork[FARMER_COUNT];
 	} farmer;
 } extern game;
 

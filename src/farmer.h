@@ -11,6 +11,7 @@ struct Farmer {
 	int			y;
 	bool			yell;
 	bool			stab;
+	bool			move;
 	int			angle;
 };
 

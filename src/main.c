@@ -27,11 +27,29 @@ struct Config config = {
 };
 
 static void init_res() {
+	DARNIT_INPUT_MAP keymap = {
+		.up = TPW_KEY_UP,
+		.down = TPW_KEY_DOWN,
+		.left = TPW_KEY_LEFT,
+		.right = TPW_KEY_RIGHT,
+		.x = TPW_KEY_SPACE,
+		.y = TPW_KEY_LCTRL,
+		.a = TPW_KEY_z,
+		.b = TPW_KEY_x,
+		.start = TPW_KEY_RETURN,
+		.select = TPW_KEY_ESCAPE,
+		.l = TPW_KEY_q,
+		.r = TPW_KEY_w,
+	};
+	
 	config.font_std = d_font_load("res/DejaVuSans.ttf", 24, 256, 256);
 	config.font_big = d_font_load("res/DejaVuSans.ttf", 64, 256, 256);
-	config.tileset = d_render_tilesheet_load("res/sprites.png", 16, 16, DARNIT_PFORMAT_RGBA8);
+	config.tileset = d_render_tilesheet_load("res/tiles.png", 16, 16, DARNIT_PFORMAT_RGBA8);
+	config.spriteset = d_render_tilesheet_load("res/sprites.png", 16, 16, DARNIT_PFORMAT_RGBA8);
 	config.map = d_map_load("res/main.ldmz");
 	config.platform = d_platform_get();
+	
+	d_keymapping_set(keymap);
 }
 
 void game_state(enum GameState new_state) {
