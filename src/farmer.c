@@ -50,6 +50,8 @@ void farmer_move() {
 
 		server_state.pp.farmer[i].coord.x = nx / 1000;
 		server_state.pp.farmer[i].coord.y = ny / 1000;
+		server_state.plist[i].x = nx;
+		server_state.plist[i].y = ny;
 	}
 
 	return;
