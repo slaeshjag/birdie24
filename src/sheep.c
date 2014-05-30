@@ -89,7 +89,7 @@ void sheep_loop() {
 
 		m_dx = f_dx;
 		m_dy = f_dy;
-		server_state.pp.sheep[i].angle = 
+		server_state.pp.sheep[i].dir = 0;
 
 		server_state.sheep[i].x += m_dx;
 		server_state.sheep[i].y += m_dy;
