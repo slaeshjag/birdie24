@@ -6,3 +6,4 @@ sockettest/udplisten
 *.swo
 *.ldi
 *.ldmz
+*.res
