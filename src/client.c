@@ -127,7 +127,8 @@ void *client_recv(void *arg) {
 
 void client_init() {
 	int i;
-	pthread_cancel(client_recv_thread);
+	if(client_recv_thread)
+		pthread_cancel(client_recv_thread);
 	/*Freeing memory is for pussies*/
 	lobby_client.client = NULL;
 	add_lobby_game("[Host server]", 0);

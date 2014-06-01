@@ -145,7 +145,12 @@ void lobby_loop() {
 	d_render_tile_blit(config.menu_background, 0, 0, 0);
 	d_render_line_draw(lobby.line, 1);
 	d_text_surface_draw(lobby.list_players);
+	
+	if(lobby.selected_game > 5) {
+		d_render_offset(0, (lobby.selected_game - 5) * d_font_glyph_hs(config.font_std));
+	}
 	d_text_surface_draw(lobby.list_games);
+	d_render_offset(0, 0);
 	
 	keys = d_keys_get();
 	d_keys_set(keys);

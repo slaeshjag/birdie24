@@ -1,12 +1,12 @@
 # Project: birdie24-compo
 # Makefile configurations
 
-NAME		=	bondeN^wArs
+NAME		=	BondeN^wArs
 VERSION		=	0.1
 
 BIN		=	"$(TOPDIR)/bin/$(NAME)"
 PREFIX		=	/usr/local
-DATAPATH	=	"/usr/share/games/bondeN^wArs"
+DATAPATH	=	"/usr/share/games/BondeN^wArs"
 APPLICATIONSPATH=	/usr/share/applications
 
 DBGFLAGS	=	-O0 -g -D__DEBUG__
