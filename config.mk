@@ -29,7 +29,7 @@ ifneq ($(wildcard /etc/debian_version),)
 endif
 
 ifeq ($(strip $(OS)), Windows_NT)
-	LDFLAGS	+=	-lws2_32
+	LDFLAGS	+=	-lws2_32 -mwindows
 	BIN	=	"$(TOPDIR)/bin/$(NAME).exe"
 else
 ifeq ($(BUILDFOR), WIN32)
