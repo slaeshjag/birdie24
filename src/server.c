@@ -131,7 +131,7 @@ void server_handle_packet(void *packet, unsigned long addr) {
 		case PROTO_TYPE_GAMESTATE:
 		case PROTO_TYPE_JOIN_GREET:
 		default:
-			fprintf(stderr, "Herpaderp wrong packet type %i\n", *((enum proto_packet_type *) packet));
+			fprintf(stderr, "Herpaderp wrong packet type 0x%X\n", *((enum proto_packet_type *) packet));
 			break;
 		case PROTO_TYPE_CONTROL:
 			//if(server_state.intro_time >= SERVER_INTRO_LENGTH)

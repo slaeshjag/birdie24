@@ -8,9 +8,11 @@
 
 #ifdef _WIN32
 
-#include <ws2tcpip.h>
+//#include <ws2tcpip.h>
 #include <winsock2.h>
 #include <windows.h>
+
+#define socklen_t int
 
 #else
 
@@ -23,6 +25,7 @@
 
 #define SOCKET int
 #define closesocket close
+#define INVALID_SOCKET -1
 
 #endif
 
@@ -40,7 +43,7 @@ int network_init(int _port) {
 	struct hostent *broadcasthost;
 	
 	config.server.connected = false;
-	if(sock >= 0)
+	if(sock != INVALID_SOCKET)
 		return 0;
 	
 	struct sockaddr_in addr = {
@@ -50,14 +53,14 @@ int network_init(int _port) {
 	addr.sin_port = htons(_port);
 	addr.sin_addr.s_addr = htonl(INADDR_ANY);
 	
-	if((sock = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
+	if((sock = socket(AF_INET, SOCK_DGRAM, 0)) == INVALID_SOCKET) {
 		printf("arne\n");
 		return -1;
 	}
 	
 	setsockopt(sock, SOL_SOCKET, SO_BROADCAST, (void *) &broadcast_enabled, sizeof(broadcast_enabled));
 	
-	if(bind(sock, (struct sockaddr *) &addr, sizeof(addr)) < 0) {
+	if(bind(sock, (struct sockaddr *) &addr, sizeof(addr)) == INVALID_SOCKET) {
 		closesocket(sock);
 		printf("berit\n");
 		return -1;
@@ -81,6 +84,7 @@ void network_close() {
 }
 
 int network_broadcast(void *buf, size_t bufsize) {
+	printf("sending \n");
 	return sendto(sock, buf, bufsize, 0, (struct sockaddr *) &broadcast.addr, sizeof(broadcast.addr));
 }
 
